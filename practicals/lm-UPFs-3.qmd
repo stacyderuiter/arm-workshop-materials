@@ -1,0 +1,91 @@
+---
+title: "UPFs (Part 3)"
+author: ""
+format: 
+  html:
+    toc: true
+    code-copy: true
+    embed-resources: true
+editor: source
+---
+
+```{r setup, include=FALSE}
+require(tidyverse)
+require(mosaic)
+require(ggformula)
+knitr::opts_chunk$set(echo = TRUE,
+                      error = TRUE,
+                      fig.width = 7, 
+                      fig.height = 4)
+
+theme_set(theme_minimal(base_size = 16))
+```
+
+# Instructions
+
+This is (another) continuation of our analysis of the UPF data - the final one.
+
+You will make additions and modifications to your previous work to get an improved and expanded final version.
+
+What you will add this time will be **inference** and a **final conclusions statement** interpreting your work.
+
+## Tasks
+
+### Model Plan (should be already done)
+
+State the question you are trying to answer with your analysis, making it as easy to understand as possible but also as specific as possible (so a reader can tell just from the question which response and predictor(s) will be in the model). Provide a rationale that justifies the predictor and response variables you will include in (or exclude from!) your model, based on our [model planning checklist](https://stacyderuiter.github.io/stat245-fa24/model-plan-checklist.pdf) and the size of the dataset.
+
+Reconsider too: should your model include any interactions?
+
+### Data Exploration (should be already done)
+
+You might want to include here the data plot you made before. If you've changed your research question, consider updating your exploratory graph so it shows the predictor and response you are most interested in.
+
+### Fit your model (should be already done)
+
+Fit your model, showing the code used to fit the model, the model `summary()`.
+
+Consider writing down the model equation. You might hand-write it; or, you may use the examples in [our online reference guide](https://applied-regression.netlify.app/quarto/math-notation) to learn how to typeset it properly (Greek letters, subscripts and all) right in your Quarto file.
+
+### Model Assessment (should be already done)
+
+Carry out model assessment for your model.
+
+You should show at least:
+
+-   A residuals vs fitted plot
+-   A histogram of the residuals
+-   An ACF plot
+
+For each one, state:
+
+-   Which condition(s) it helps you to check
+-   Whether you think the condition(s) are met or not
+-   What specific evidence you saw in the plot that allowed you to make your decision about whether the condition was met. *Example: "This histogram of the residuals shows that the residual normality condition is met, since the distribution of residuals is quite unimodal and mostly symmetric, with only slight right skew and no major outliers."*
+
+At the end, make note of your overall conclusion: If **all** conditions are met then the model passes assessment and can be used to draw conclusions; if *any* condition is not met, then you *cannot* actually draw valid conclusion from this model.
+
+### Prediction Plot
+
+Make a prediction plot for your main predictor of interest.
+
+Include in your text a brief statement of what the plot shows technically (you don't need to interpret what it means yet): For example, "The figure above shows model predictions illustrating how \[response\] is associated with \[key predictor\]. The shaded area \[or the errorbars\] shows a 95% confidence interval. **To make these predictions, \[other predictors\] were held constant at \[state the constant values that you used for predictors not shown in the plot\].**" (Don't forget that last part, stating the constant values!)
+
+### Making inferences (Model Selection)
+
+Make appropriate calculations (you might use ANOVA **or** AIC **or** BIC: but just choose *one!)* that will help you make an inference about whether your key predictor of interest is *really* associated with your response.
+
+Show the code you use and the R output. (You will interpret the results in the Conclusions part.)
+
+### Conclusions & Interpretation
+
+Explain the answer to your question of interest (whether your main predictor is *really* associated with your response). For a complete answer, you'll need to talk about:
+
+-   Model assessment outcome (is the model appropriate, so that we *can* rely on it to provide trustworthy conclusions?)
+
+-   Your prediction plot (what does it tell you about the relationship between your predictor and response – size and direction of effect?)
+
+-   Your model selection results (what do they tell you about the relationship between your predictor and the response – *is* there an association, or is it plausible there's really no relationship?)
+
+*Note, if your model doesn't pass assessment, you won't be able to draw real conclusions; in a real analysis you'd refine the approach until all conditions were met, but you might not have time to do that today. Yet you can still interpret (for practice) what the prediction plot and selection* would *lead you to conclude,* IF *the model had passed assessment!*
+

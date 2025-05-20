@@ -1,0 +1,139 @@
+---
+title: "Causal Diagrams & Model Planning"
+author: ""
+date: "June 2025"
+output:
+  xaringan::moon_reader:
+    css: ['default', 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css', 'slides.css']
+    lib_dir: libs
+    nature:
+      titleSlideClass: ['inverse','middle','left',my-title-slide]
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '4:3'
+---
+
+```{r, setup-lm1, include=FALSE}
+library(ggformula)
+library(tidyverse)
+library(dagitty)
+library(CalvinBayes)
+
+knitr::opts_chunk$set(echo = TRUE, 
+                      fig.width = 7, 
+                      fig.height = 3,
+                      tidy = FALSE,
+                      fig.align = 'center', 
+                      message = FALSE, 
+                      warning = FALSE,
+                      error = TRUE,
+                      out.width = '60%', 
+                      dpi = 300)
+theme_set(theme_minimal(base_size = 22))
+
+bonobos <- read_csv(file='http://sldr.netlify.app/data/bonobo_faces.csv')
+# add one missing for demo purposes
+bonobos[28, 'normDS'] <- NA
+
+m3_2q2c <- lm(AssR ~ fWHR + normDS + Sex + Group, 
+           data = bonobos)
+```
+
+
+
+# Causal Diagrams
+### There's more to planning than just p < n/15!
+
+```{r, simple-causal-diagram, echo = FALSE, out.width='85%'}
+# create the DAG object
+causal_diagram_1 <- dagitty("dag{
+  X -> Y;
+}")
+# plot it
+gg_dag(causal_diagram_1, size = 16)
+```
+
+---
+## "Causal"? 
+### Can we actually make *causal conclusions*?
+
+.small[
+- If detect association, can conclude \_\_\_ *causes* \_\_\_ IFF...
+<br>
+<br>
+- Otherwise:
+<br>
+<br>
+- So why use "causal" diagrams to plan models?
+  - Transparency about assumptions
+  - Clear, consistent way to choose predictors
+  ]
+
+---
+
+## H.E.A.L.T.H. Camp Example
+### Response: Test Score
+
+.pull-left[
+- Age
+- Sex 
+- Grade in school
+- Neighborhood
+- Race & Ethnicity
+]
+
+.pull-right[
+- Income
+- Interest in health career
+- Timepoint (before/after camp)
+]
+---
+# Confounder
+
+---
+# Precision Covariate
+
+---
+# Mediator
+
+---
+# Moderator or Modifier
+## Also known as: *Interaction*
+---
+# Collider
+
+---
+# Can get complex
+## M-Bias
+
+```{r, m-bias-diagram, echo = FALSE, out.width='85%'}
+# create the DAG object
+causal_diagram_2 <- dagitty("dag{
+  X -> Y;
+  A -> X;
+  A -> D;
+  B -> Y;
+  B -> D;
+}")
+# plot it
+gg_dag(causal_diagram_2, size = 16, highlight = c('X', 'Y'))
+```
+
+.small[
+*We are using a some simple principles but there could be much more to learn!*
+]
+.smaller[
+*Resource: Guide to Causal Inference <https://doi.org/10.1098/rspb.2020.2815>*
+]
+---
+# Look back
+## which variables should be predictors
+## to model HEALTH Camp test score?
+
+<br>
+# score ~ 
+---
+
+# Your Summary
+## Linear modeling step-by-step:

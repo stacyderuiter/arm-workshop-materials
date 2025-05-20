@@ -1,0 +1,159 @@
+---
+title: "Binary Regression Modeling Practice"
+format: 
+  html:
+    toc: true
+    toc_float: true
+    code-copy: true
+    embed-resources: true
+    code-tools: true
+editor: source
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(tidyverse)
+library(ggformula)
+library(glmmTMB)
+library(ggeffects)
+```
+
+## Data: Housing Loans
+
+#### Research Question
+
+Your goal is to plan and fit a regression model with `action_taken` as the response variable (using all data or Kent County only - you choose). You may choose predictors to match the analysis in [an analysis of similar nationwide data by *The Markup* ](https://themarkup.org/denied/2021/08/25/the-secret-bias-hidden-in-mortgage-approval-algorithms), or if you prefer, make your own plan.
+
+#### Data Details
+
+This data is from HDMA, on mortgage approvals in Michigan in 2020 (similar to, but not the same as, the data analyzed by The Markup).
+
+The data were obtained from <https://ffiec.cfpb.gov/data-browser/> and pre-processed to make the file size smaller, and to filtering the data like [The Markup](https://themarkup.org/denied/2021/08/25/the-secret-bias-hidden-in-mortgage-approval-algorithms) did to include potential borrowers meeting conditions:
+
+-   Conventional mortgage only
+-   For purpose of home purchase
+-   1- to 4-family home
+-   Site-built (not manufactured/mobile home)
+-   Not for business purpose
+-   "First lien" status
+-   Loan approved ("originated") or denied
+
+The code below reads in the data, and also does a bit of data wrangling that will be useful (you don't have to understand details or be able to replicate this).
+
+```{r}
+hdma_mi_20 <-
+  read_csv('https://sldr.netlify.app/data/hdma-mi-20.csv',
+           show_col_types = FALSE) |>
+  # race variable combining rare groups
+  mutate(
+    derived_race = case_when(
+      derived_race == 'White' ~ 'White',
+      derived_race == 'Black or African American' ~ 'Black or African American',
+      derived_race == 'Asian' ~ 'Asian',
+      derived_race == 'Race Not Available' ~ 'Race Not Available',
+      TRUE ~ 'Other'
+    ),
+    # make sure values of numeric values are numbers
+    loan_to_value_ratio = parse_number(loan_to_value_ratio),
+    property_value = parse_number(property_value),
+    loan_term = parse_number(loan_term),
+    # whether there is a co-applicant
+    co_applicant = ifelse(`co-applicant_ethnicity-1` == 5, 'No', 'Yes'),
+    # service underwriting the mortgage
+    aus = case_when(`aus-1` == 1 ~ 'Desktop Underwriter (DU)',
+                    `aus-1` == 2 ~ 'Loan Prospector (LP) or Loan Product Advisor',
+                    `aus-1` == 1111 ~ 'Exempt',
+                    TRUE ~ 'Other'),
+    # unknown age is encoded as "8888"
+    applicant_age = ifelse(applicant_age == '8888', NA, applicant_age)
+  ) 
+```
+
+*the warnings about "parsing failures" are ok: those are cases where numeric variables had non-numeric contents which R failed to convert to numbers (this was expected).*
+
+```{r}
+# Limit to only Kent County (where Calvin is located), if desired
+hdma_kent_20 <- hdma_mi_20 |>
+  filter(county_code == 26081) |>
+  # at the county scale, it is very rare 
+  # for race to be known and sex to be unknown
+  # and this causes trouble...so remove cases where sex is not known
+  filter(derived_sex != 'Sex Not Available')
+```
+
+
+### Minimal Data Prep
+
+Note that in this housing dataset, many categorical variables are stored as numeric codes. 
+
+**Even if you don't want to do *any* additional data prep, make sure you `factor()` your response variable,** plus any **categorical predictors** you want to use in your model**, so they are not treated as numeric data.**
+
+Something like:
+
+```{r}
+#| eval: false
+hdma_mi_20 <- hdma_mi_20 |>
+  mutate(my_response_variable = factor(my_response_variable),
+         my_predictor_1 = factor(my_predictor_1),
+         my_predictor_2 = factor(my_predictor_2)
+         # (repeat above for as many categorical predictors as you need to use)
+  )
+```
+
+### (Optional) More Advanced Data Prep
+
+You can find a list of variable definitions and codes used in the variables in the dataset at:
+
+<https://ffiec.cfpb.gov/documentation/publications/loan-level-datasets/lar-data-fields> (search and find is your friend!)
+
+Ideally you will create and use variables where the category labels are intelligible words rather than numeric codes! You may also need to rename variables that have "-" in the names - refer to the "old/bad" names in back-ticks like: \`bad-variable-name\`. For detailed examples on how to rename and reorganize this dataset for use, see: <https://stacyderuiter.github.io/stat245-sp25/housing-wrangling.html>.
+
+## Tasks
+
+1.  **Plan:** Articulate your model plan. You may do this one of two ways:
+    A.  Make your own plan, considering dataset size and maybe a causal diagram; **or,**
+    B.  To replicate (as closely as possible) the model fitted in the analysis by [The Markup](https://themarkup.org/denied/2021/08/25/the-secret-bias-hidden-in-mortgage-approval-algorithms), relying on their expertise in this field. *To do this: See* the "BIG HINT" *below.*
+2.  **Explore** Read your data into R and make a one well-designed exploratory plot of the data that is relevant to your research question. In 1-2 sentences, explain A) Any design choices (type of graph, use of color, etc.) and B) Any patterns you see in the graph.
+3.  **Fit** a regression model that is consistent with your model plan. Show its `summary()`.
+  - Note: depending on the dataset and predictors you use, you may well run into model-fitting warnings. Don't ignore these; work with your team or instructors to solve them!
+4.  **Assess** your model, showing all your work: clearly state which condition you're checking, whether it's met, and what evidence supports your decision.
+5.  State your **conclusions** about the relationship between your key predictor of interest and the response. To support your answer, you might refer to **model selection** results, **model assessment** (to confirm results are trustworthy) and maybe a **prediction plot** or data graph to describe effect size/direction.
+
+## BIG HINT: The Markup's analysis {#hint}
+
+In the article we recently read, a box was included linking to a detailed description of the methods Markup analysts used to obtain their results. They state that "Our national model for conventional applications contained 17 variables:
+
+-   Race (our variables `derived_race` and/or `derived_ethnicity`)
+
+-   Sex (our variable `derived_sex`)
+
+-   Whether the application had a co-applicant (`co_applicant`)
+
+-   Age (`applicant_age`)
+
+-   Income (`income`)
+
+-   Loan amount (`loan_amount`)
+
+-   Property value (`property_value`)
+
+-   Mortgage term (`loan_term`, in months)
+
+-   Credit model used (`applicant_credit_score_type`)
+
+-   Debt-to-income ratio (`debt_to_income_ratio`)
+
+-   Combined loan-to-value ratio (`loan_to_value_ratio`)
+
+-   The automated underwriting system used (`aus`)
+
+-   The ratio between the median income of the census tract where the property is located and the median income of the metro area (***not available to us)***
+
+-   The type of lender (added variable to HMDA data) (***not available to us)***
+
+-   The size of the lender (added variable to HMDA data) (***not available to us)***
+
+-   Non-Hispanic White population percentage of the census tract where the property is located (added variable to HMDA data) (***not available to us)***
+
+-   Size of the metro area where the property is located (added variable to HMDA data) (***not available to us)***

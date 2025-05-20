@@ -1,0 +1,67 @@
+---
+title: "Count Regression Practice"
+format: 
+  html:
+    toc: true
+    toc_float: true
+    code-copy: true
+    embed-resources: true
+editor: source
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(tidyverse)
+```
+
+## Data: Air Quality
+
+#### Research Question
+
+You will plan and fit a regression model with `cancer_cases` as the response variable.
+
+#### Data Details
+
+This dataset is inspired by ProPublica's [*Visualizing Toxic Air*](https://www.propublica.org/nerds/visualizing-toxic-air) project. You might want to spend a few minutes exploring their interactive map before you dive in.
+
+You'll have the opportunity to investigate cancer case rates in relation to air pollution sources, cancer risk factors, and demographics in Louisiana, perhaps replicating some of the results from Terrell and St Julien 2022, ["Air pollution is linked to higher cancer rates among black or impoverished communities in Louisiana"](https://iopscience.iop.org/article/10.1088/1748-9326/ac4360#erlac4360s2).
+
+The authors used publicly available data, but from a variety of sources that were not all clearly specified in the article; also, they state they had 750 rows of data, while in trying to re-create their dataset we ended up with a dataset only about 1/3 as large.
+
+Because of these differences, and also because the original analysis used incidence rates (a derived quantity based on case counts *plus* population size and demographics) where we will use the original counts, you should not expect to replicate the authors' findings exactly. However, you might still use their paper as context and expert advice!
+
+You can obtain our data at: <https://sldr.netlify.app/data/LA_cancer_data.csv>.
+
+Variables in the dataset include:
+
+-   `state` (always "LA")
+
+-   `parish` in Louisiana (similar to a county)
+
+-   `census_tract` (which gives the finer-scale geographic location)
+
+-   Number of `cancer_cases` per year in this census tract
+
+-   `annual_population`, the number of people in the census tract
+
+-   `median_age` of people in the census tract
+
+-   Demographic characteristics of the census tract: `percent_black`, `percent_poverty`, `percent_manufacturing` jobs, `percent_construction` jobs, `percent_smokers`, `percent_obese`
+
+-   Air-pollution-related cancer risk estimates, based on air quality measurements and modeling (like you read about). Several values are provided for each census tract: 
+  - `point_cancer_risk` and `nonpoint_cancer_risk` in the original units used for the estimates, as well as 
+  - scaled versions `relative_point_cancer_risk` and `relative_nonpoint_cancer_risk` with values *relative to* other LA census tracts
+
+## Tasks
+
+1.  **Plan:** Articulate your model plan for the model you will fit to your chosen dataset. You'll likely want to identify one predictor variable that is of most interest to you in your analysis (to focus on in Question 5). Provide a rationale to explain which variables will/won't be included in your model, and why. Note whether or not you included an offset (with a brief rationale). Consider whether you will include any interactions, too! Support your rationale with reference to the size of the dataset and our model planning checklist.
+2.  **Explore** Read your data into R and make a one well-designed exploratory plot of the data that is relevant to your research question - so, probably, including the response variable and at least your key predictor. (In a real analysis we'd make more...but that takes time.) Make a note of A) Any design choices (type of graph, use of color, etc.) and B) Any patterns you see in the graph.
+3.  **Fit** a regression model that is consistent with your model plan. Show its `summary()`. (Equation is optional - we will rely more on prediction plots more from now on.) Consider whether your model should include an offset or not.
+4.  **Assess** your model. Show all your work:
+    -   First, state the conditions you need to check.
+    -   For any graph you present, state...
+        -   which condition(s) you are checking,
+        -   whether the condition(s) are met, and
+        -   how you know (clearly describing the evidence you see in the plot).
+5.  **Conclusions** Based on the model assessment and selection results plus the prediction plot, what can you conclude about the relationship between your key predictor of interest and the number of cancer cases? *Are* they associated and if so what's the size and direction of the effect?

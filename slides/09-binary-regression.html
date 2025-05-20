@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Binary Regression</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="" />
+    <script src="libs/header-attrs-2.29/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: inverse, middle, left, my-title-slide, title-slide
+
+.title[
+# Binary Regression
+]
+.author[
+### 
+]
+.date[
+### June 2025
+]
+
+---
+
+
+
+
+# Data Source
+#### Original source: &lt;http://datadryad.org/resource/doi:10.5061/dryad.sq72d&gt;
+#### Our version at: &lt;https://sldr.netlify.app/data/FrogAbnormalities.csv&gt;
+
+
+
+&lt;iframe width="560" height="315" src="https://www.youtube.com/embed/U9Vj_GQFGHQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen&gt;&lt;/iframe&gt;
+
+---
+.small[
+Variables in the dataset include:
+
+-   IDs: `collection_id`, `frog_id`, `site`
+-   Info on time of data collection: `date`, `year`,
+    `coll_date`
+-   Size and developmental stage of the frog:
+    `gosner_stage`, `tail_length` (which is longer for young frogs, that
+    is, tadpoles)
+-   Whether or not the frog has any abnormality in general (`abnormal`),
+    an injury (`bleeding_injury`), or a specific type of abnormality:
+    `skeletal_abnormality`, `eye_abnormality`, `surface_abnormality`
+-   Relative abundance of invertebrate predators of frogs:
+    `dragonfly_relative_density` and `other_invert_relative_density`
+-   *Rough* water testing results:
+    `detectable_analytes` (average number of contaminants present)
+]
+
+---
+# Dataset Size: n/15 revised
+
+---
+### Model Plan?
+
+.smaller[
+
+&gt; &gt; The repeated occurrence of abnormal amphibians in nature points to
+&gt; &gt; ecological imbalance, yet identifying causes of these abnormalities
+&gt; &gt; has proved complex. Multiple studies have linked amphibian
+&gt; &gt; abnormalities to chemically contaminated areas, but inference about
+&gt; &gt; causal mechanisms is lacking. Here we use a high incidence of
+&gt; &gt; abnormalities in Alaskan wood frogs to strengthen inference about
+&gt; &gt; the mechanism for these abnormalities. We suggest that limb
+&gt; &gt; abnormalities are caused by a combination of multiple stressors.
+&gt; &gt; Specifically, toxicants lead to increased predation, resulting in
+&gt; &gt; more injuries to developing limbs and subsequent developmental
+&gt; &gt; malformations. We evaluated a variety of putative causes of frog
+&gt; &gt; abnormalities at 21 wetlands on the Kenai National Wildlife Refuge,
+&gt; &gt; south-central Alaska, USA, between 2004 and 2006. Variables
+&gt; &gt; investigated were organic and inorganic contaminants, parasite
+&gt; &gt; infection, abundance of predatory invertebrates, UVB, and
+&gt; &gt; temperature. Logistic regression and model comparison using the
+&gt; &gt; Akaike information criterion (AIC) identified dragonflies and both
+&gt; &gt; organic and inorganic contaminants as predictors of the frequency of
+&gt; &gt; skeletal abnormalities. We suggest that both predators and
+&gt; &gt; contaminants alter ecosystem dynamics to increase the frequency of
+&gt; &gt; amphibian abnormalities in contaminated habitat. Future experiments
+&gt; &gt; should test the causal mechanisms by which toxicants and predators
+&gt; &gt; may interact to cause amphibian limb abnormalities. - Reeves et al.
+&gt; &gt; 2010, &lt;https://doi.org/10.1890/09-0879.1&gt;
+
+]
+---
+## Causal Diagram?
+
+&lt;img src="images/frog-causal3.png" width="97%" style="display: block; margin: auto;" /&gt;
+
+---
+# Critique?
+
+
+``` r
+skeletal_abnormality ~ detectable_analytes +
+  dragonfly_relative_density +
+  other_invert_relative_density
+```
+
+.small[
+
+-   Why not include injuries? 
+-   Would you include site? 
+-   Why isn't the frog's developmental stage in there?
+  
+]
+---
+
+# Regression Evolution
+## old: linear regression 
+
+$$y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + ...\beta_k x_k + \epsilon $$
+
+- where `\(x\)`s are the `\(k\)` predictor variables, 
+- `\(\beta\)`s are the parameters to be estimated by the model, 
+- and `\(\epsilon \sim N(0,\sigma)\)` are the model residuals.
+
+---
+
+## Regression Evolution
+
+.small[
+When our response variable was a *count* variable, we modified our equation to:
+]
+
+`$$log(\lambda_i) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 +$$`
+`$$...\beta_k x_k + \epsilon_{link}$$`
+.small[
+positing that `\(y_i \sim Pois(\lambda_i)\)` for Poisson regression; similarly for negative binomial regression, we just replaced that Poisson distribution with a negative binomial distribution (and replaced `\(\lambda_i\)` with `\(\mu_i\)`, stating that `\(y_i \sim NegBin(\mu_i, \sigma)\)`).
+]
+---
+
+# Binary Response?
+
+What if our response variable is *logical* -- a categorical variable with just two possible values?  We will designate one of the two values a "success," and then we want to predict the probability of success as a function of some set of predictors.  What will our model equation look like in this case?
+
+&lt;!-- $$ logit(p_i) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + ...\beta_k x_k + \epsilon_{link}$$ --&gt;
+
+---
+
+# Which Distribution?
+
+---
+
+# Link Functions
+
+&lt;img src="images/binary-regression-links.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+.smaller[
+Note: figure is from &lt;http://data.princeton.edu/wws509/notes&gt;].
+
+---
+## Binary Regression Equation
+
+---
+
+class: small
+
+# Back to Frogs...
+## How does this equation relate back to our desired response variable? 
+
+- `\(y_i\)`, the `\(i\)`th observation of the response variable is assumed to follow a binomial distribution with probability `\(p_i\)` 
+- In other words: `\(y_i \sim Binom(n_i, p_i)\)` 
+- `\(n_i\)` depends on the setup of the data -- often n = 1 for each row of the dataset, as here where each row is one frog. We can think of each frog as one binomial trial, with success/failure meaning abnormality/normality of the frog.
+
+---
+
+## Checking the data setup
+
+- We would like to model the proportion frogs with abnormalities as a function of a set of predictors. 
+- The variable `skeletal_abnormality` has values "Yes" and "No".  
+- In R, if we use this (categorical) variable as our response, how will R determine which level (value of the variable) is a "success"?
+
+---
+## Response Variable
+
+
+``` r
+frogs |&gt;
+  # pull out just the variable in question
+  pull(skeletal_abnormality) |&gt;
+  # print out the variable's unique values
+  levels()
+```
+
+```
+## NULL
+```
+
+---
+## Binary models *require* a `factor()` Response Variable
+### (or one that is 0/1 but that's not preferred!)
+
+.small[
+
+``` r
+frogs &lt;- frogs |&gt;
+  # force our response to be "factor" not "character". 
+  # This will also auto-sort the levels in to alpha order.
+  # So don't do it ever AFTER you have carefully re-ordered  them!
+  mutate(skeletal_abnormality = factor(skeletal_abnormality))
+
+# to check the results:
+frogs |&gt;
+  # pull out just the variable in question
+  pull(skeletal_abnormality) |&gt;
+  # print out the variable's unique values
+  levels()
+```
+
+```
+## [1] "No"  "Yes"
+```
+]
+
+---
+# Data Prep for Binary Model
+## Choosing the Order of `factor` Variable Values
+
+.small[
+
+``` r
+# list the values in the "new" order you want
+frogs &lt;- frogs |&gt; 
+  mutate(skeletal_abnormality = forcats::fct_relevel(skeletal_abnormality, 'No', 'Yes'))
+# check the result
+frogs |&gt; pull(skeletal_abnormality) |&gt; levels()
+```
+
+```
+## [1] "No"  "Yes"
+```
+]
+
+---
+
+
+# Model Fitting 
+### *Before* this, make sure response is a factor
+
+
+``` r
+frog_model &lt;- glmmTMB(skeletal_abnormality ~ 
+                        detectable_analytes + 
+                        dragonfly_relative_density +
+                        other_invert_relative_density,
+                 data = frogs,
+                 family = binomial(link = 'logit'))
+```
+
+
+---
+class: smaller
+
+
+``` r
+summary(frog_model)
+```
+
+```
+##  Family: binomial  ( logit )
+## Formula:          
+## skeletal_abnormality ~ detectable_analytes + dragonfly_relative_density +  
+##     other_invert_relative_density
+## Data: frogs
+## 
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+##    1382.8    1406.8    -687.4    1374.8      2918 
+## 
+## 
+## Conditional model:
+##                                 Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)                   -2.802e+00  1.599e-01 -17.515  &lt; 2e-16 ***
+## detectable_analytes           -3.270e-03  6.075e-03  -0.538  0.59034    
+## dragonfly_relative_density     5.209e-03  1.949e-03   2.672  0.00753 ** 
+## other_invert_relative_density -3.357e-05  1.073e-04  -0.313  0.75425    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+---
+# Assessment
+## Conditions
+
+---
+# Assessment
+## ACF
+
+&lt;img src="09-binary-regression_files/figure-html/frog-assess1-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+## Do not use this code!
+
+.small[
+
+``` r
+# DO NOT USE THIS IN YOUR OWN ASSESSMENT OF YOUR MODELS!
+gf_point(resid(frog_model, type='pearson') ~ fitted(frog_model)) |&gt;
+  gf_labs(title='frog_model', 
+          y=' Pearson\nResiduals',x='Fitted Values')
+```
+
+&lt;img src="09-binary-regression_files/figure-html/frog-assess2-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+## Assessment
+### Scaled Residual Plot
+
+.small[
+
+``` r
+# ACUTALLY USE **THIS** WAY FOR MEAN-VARIANCE CONDITION
+library(DHARMa)
+sim_frog_res &lt;- simulateResiduals(frog_model)
+plotResiduals(sim_frog_res, quantreg = FALSE)
+```
+
+&lt;img src="09-binary-regression_files/figure-html/frog-assess3-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+# Selection
+## Just as usual. 
+## For example, using ANOVA:
+
+.small[
+
+``` r
+car::Anova(frog_model)
+```
+
+```
+## Analysis of Deviance Table (Type II Wald chisquare tests)
+## 
+## Response: skeletal_abnormality
+##                                Chisq Df Pr(&gt;Chisq)   
+## detectable_analytes           0.2898  1   0.590339   
+## dragonfly_relative_density    7.1417  1   0.007531 **
+## other_invert_relative_density 0.0980  1   0.754254   
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+]
+
+---
+##  Prediction Plots (same as ever)
+
+
+``` r
+library(ggeffects)
+ggpredict(frog_model,
+          terms = 'dragonfly_relative_density') |&gt;
+  plot()
+```
+
+&lt;img src="09-binary-regression_files/figure-html/unnamed-chunk-8-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Prediction Plots
+
+
+``` r
+ggpredict(frog_model, 
+          terms = 'detectable_analytes') |&gt;
+  plot()
+```
+
+&lt;img src="09-binary-regression_files/figure-html/unnamed-chunk-9-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false,
+  "ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

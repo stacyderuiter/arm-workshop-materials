@@ -1,0 +1,75 @@
+---
+title: "UPFs (Part 1)"
+author: ""
+format: 
+  html:
+    toc: true
+    code-copy: true
+editor: source
+---
+
+```{r setup, include=FALSE}
+require(tidyverse)
+require(mosaic)
+require(ggformula)
+knitr::opts_chunk$set(echo = TRUE,
+                      error = TRUE,
+                      fig.width = 7, 
+                      fig.height = 4)
+
+theme_set(theme_minimal(base_size = 16))
+```
+
+# Instructions
+
+How does eating a diet rich in ultra-processed foods affect our health? Previously, many people thought that the negative impacts of these foods were mainly because they contained unhealthy amounts of stuff like sugars, fat, carbs. But is that all, or is there something more going on? Hall and colleagues set out to study this question, working in controlled conditions so they could compare people eating processed and unprocessed foods (but with the same nutritional profile in terms of daily amounts of calories, sugar, fat, fiber, and macronutrients).
+
+The data you'll analyze now is from a recent paper on UPFs (ultra-processed foods) reporting results from a randomized controlled experiment. 
+
+## Data
+
+You will **choose *one* of two datasets** about the effect of eating ultra-processed foods (UPF) on human health:
+
+-   [UPF daily intakes](https://stacyderuiter.github.io/stat245-fa25/upf-daily-intake.html) or
+
+-   [UPF by diet](https://stacyderuiter.github.io/stat245-fa25/upf-by-diet.html)
+
+(Follow the links to obtain metadata and the URL for each dataset - note the links above are *not* to the data .csv files directly!)
+
+\newpage
+
+## Tasks
+
+### Planning a Model
+
+**Consider how you would use linear regression to investigate the effects of UPF.** (You will need to choose *one* response variable to work on.) In the text of your report, identify your response and predictor(s). Try to include all the predictors you honestly think will impact the response, up to the maximum the dataset can support. In the text part of your file, provide a rationale for your choices based on the size of the dataset and what you know about the data and the research question.
+
+### Graphics & Data Exploration
+
+**Create at least one visualization (graph)** to explore relationships between your response and one or more predictors. Design a graph that can tell a story or provide an insight relevant to the model you have planned, and include in your report a few sentences explaining...
+
+-   your design choices (graph type, use of color, labels, etc.) and
+
+-   what you learn from your graph (what's the initial answer to your research question?).
+
+### Model Fitting
+
+**Fit the linear regression model you have planned** in R, showing the model `summary()`. 
+
+Consider showing the model equation -- you might hand-write it; or, you may use the examples in [our online reference guide](https://applied-regression.netlify.app/quarto/math-notation) to learn how to typeset it properly (Greek letters, subscripts and all) right in your Quarto file.
+
+### Organization
+
+-   Ensure that your file has an appropriate title and has your name on it
+
+-   Use section and subsection headers as needed to guide the reader through your work
+
+-   In the text part of your file, include adequate explanations and interpretations of your analysis to guide the reader. The audience is your professor and classmates; another student in the class should be able to follow and understand your explanations.
+
+-   Make sure no R code goes off the edge of the page (if needed, you can put line breaks after any comma or plus sign)
+
+-   Make sure your setup chunk (with the `library()` calls) includes the initial line: `#| include: false` so that undesirable messages and warnings resulting from the `library()` calls are not shown in your rendered file.
+
+### Notes
+
+*You may feel this analysis is incomplete, or be wondering, "What does this all mean, what conclusion can we draw?" You are right! We will keep working and learning and you'll update your results next time.*
