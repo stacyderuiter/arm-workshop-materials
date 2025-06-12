@@ -33,7 +33,7 @@ What you will add this time will be **inference** and a **final conclusions stat
 
 ### Model Plan (should be already done)
 
-State the question you are trying to answer with your analysis, making it as easy to understand as possible but also as specific as possible (so a reader can tell just from the question which response and predictor(s) will be in the model). Provide a rationale that justifies the predictor and response variables you will include in (or exclude from!) your model, based on our [model planning checklist](https://stacyderuiter.github.io/stat245-fa24/model-plan-checklist.pdf) and the size of the dataset.
+State the question you are trying to answer with your analysis, making it as easy to understand as possible but also as specific as possible (so a reader can tell just from the question which response and predictor(s) will be in the model). Provide a rationale that justifies the predictor and response variables you will include in (or exclude from!) your model, based on our [model planning checklist](https://stacyderuiter.github.io/stat245-sp25/model-plan-checklist.pdf) and the size of the dataset.
 
 Reconsider too: should your model include any interactions?
 

@@ -1,0 +1,54 @@
+---
+title: "Applied Regression Modeling Workshop Feedback"
+format: 
+  typst:
+    include-in-header:
+      - text: "#set page(footer: context [])"
+margin:
+  top: 0.5in
+  bottom: 0.5in
+  left: 0.5in
+  right: 0.5in
+editor: source
+---
+
+```{r}
+#| label: setup
+#| include: false
+```
+*You can also respond electronically at: <https://cutt.ly/arm-feedback>*
+
+## Session time and / or topic: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
+### I learned...
+
+```{=typst} 
+#v(0.85in)
+```
+
+### I appreciated...
+
+```{=typst} 
+#v(0.85in)
+```
+
+### I wonder...
+
+```{=typst} 
+#v(0.85in)
+```
+
+### I am concerned or confused about...
+
+```{=typst} 
+#v(0.85in)
+```
+
+### I would like to have...
+
+```{=typst} 
+#v(0.85in)
+```
+
+### Other:
+

@@ -5,6 +5,7 @@ format:
   html:
     toc: true
     code-copy: true
+    embed-resources: true
 editor: source
 ---
 
@@ -30,9 +31,9 @@ The data you'll analyze now is from a recent paper on UPFs (ultra-processed food
 
 You will **choose *one* of two datasets** about the effect of eating ultra-processed foods (UPF) on human health:
 
--   [UPF daily intakes](https://stacyderuiter.github.io/stat245-fa25/upf-daily-intake.html) or
+-   [UPF daily intakes](https://stacyderuiter.github.io/stat245-sp25/upf-daily-intake.html) or
 
--   [UPF by diet](https://stacyderuiter.github.io/stat245-fa25/upf-by-diet.html)
+-   [UPF by diet](https://stacyderuiter.github.io/stat245-sp25/upf-by-diet.html)
 
 (Follow the links to obtain metadata and the URL for each dataset - note the links above are *not* to the data .csv files directly!)
 
