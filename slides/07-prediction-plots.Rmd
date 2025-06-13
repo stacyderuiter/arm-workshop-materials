@@ -248,3 +248,11 @@ predict_response(cancer_model,
 ]
 
 ## 4. What happens if you swap the order of the `terms` being plotted?
+
+---
+# Feedback
+## <https://cutt.ly/arm-feedback>
+
+```{r, echo = FALSE, out.width = "40%", fig.align='center'}
+knitr::include_graphics("images/quick-feedback-qr-code.png")
+```

@@ -248,3 +248,11 @@ gg_dag(causal_diagram_2, size = 16, highlight = c('X', 'Y'))
 ---
 
 ## What's Your Model Process?
+
+---
+# Feedback
+## <https://cutt.ly/arm-feedback>
+
+```{r, echo = FALSE, out.width = "40%", fig.align='center'}
+knitr::include_graphics("images/quick-feedback-qr-code.png")
+```

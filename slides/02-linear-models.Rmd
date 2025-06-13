@@ -450,3 +450,11 @@ b2 <- bonobos |>
 gf_point(AssR ~ fWHR, data = b2) |>
   gf_lm()
 ```
+
+---
+# Feedback
+## <https://cutt.ly/arm-feedback>
+
+```{r, echo = FALSE, out.width = "40%", fig.align='center'}
+knitr::include_graphics("images/quick-feedback-qr-code.png")
+```
