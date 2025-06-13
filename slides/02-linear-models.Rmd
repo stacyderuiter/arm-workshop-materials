@@ -33,6 +33,45 @@ knitr::opts_chunk$set(echo = TRUE,
 theme_set(theme_minimal(base_size = 22))
 ```
 
+class: huge, subsection, inverse, center
+<br>
+<br>
+# Why?
+---
+## Your First Dataset
+
+```{r, echo = FALSE, out.width="70%"}
+knitr::include_graphics("https://cdn.ncbi.nlm.nih.gov/pmc/blobs/5a03/7946062/f82cddc1b990/nihms-1528772-f0001.jpg")
+```
+
+---
+## Or...the student versions
+
+```{r, echo = FALSE, out.width="99%"}
+knitr::include_graphics("images/upf2.png")
+```
+
+---
+## Or...the student versions
+
+```{r, echo = FALSE, out.width="99%"}
+knitr::include_graphics("images/upf3.png")
+```
+
+---
+## Or...the student versions
+
+```{r, echo = FALSE, out.width="99%"}
+knitr::include_graphics("images/upf1.png")
+```
+
+---
+# So, Why?
+
+- Understand how *more than one thing* at a time influences our outcome
+- *Quantify* which patterns are likely real and which might be just noise
+
+---
 # Data
 [*Facial width-to-height ratio is associated with agonistic and affiliative dominance in bonobos (**Pan paniscus**)*](https://royalsocietypublishing.org/doi/suppl/10.1098/rsbl.2019.0232) (J.S. Martin and colleagues)
 
