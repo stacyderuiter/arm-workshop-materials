@@ -4,6 +4,7 @@ author: ""
 date: "June 2025"
 output:
   xaringan::moon_reader:
+    self_contained: true
     css: ['default', 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css', 'slides.css']
     lib_dir: libs
     nature:
