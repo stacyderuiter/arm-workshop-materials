@@ -6,8 +6,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="First author name goes here">
+<meta name="author" content="You can have more than one author">
+<meta name="dcterms.date" content="2025-06-13">
 
-<title>Count Regression Practice</title>
+<title>Practical 1: Fit a Model to UPF Data</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -3053,23 +3056,46 @@ vertical-align: -.125em;
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#data-air-quality" id="toc-data-air-quality" class="nav-link active" data-scroll-target="#data-air-quality">Data: Air Quality</a></li>
-  <li><a href="#tasks" id="toc-tasks" class="nav-link" data-scroll-target="#tasks">Tasks</a></li>
+  <li><a href="#this-file" id="toc-this-file" class="nav-link active" data-scroll-target="#this-file">This File</a></li>
+  <li><a href="#overview" id="toc-overview" class="nav-link" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
+  <li><a href="#tasks" id="toc-tasks" class="nav-link" data-scroll-target="#tasks">Tasks</a>
+  <ul class="collapse">
+  <li><a href="#read-in-your-data" id="toc-read-in-your-data" class="nav-link" data-scroll-target="#read-in-your-data">1. Read in your data</a></li>
+  <li><a href="#plan-a-model" id="toc-plan-a-model" class="nav-link" data-scroll-target="#plan-a-model">2. Plan a Model</a></li>
+  <li><a href="#optional-graphics-data-exploration" id="toc-optional-graphics-data-exploration" class="nav-link" data-scroll-target="#optional-graphics-data-exploration">3. Optional: Graphics &amp; Data Exploration</a></li>
+  <li><a href="#model-fitting" id="toc-model-fitting" class="nav-link" data-scroll-target="#model-fitting">4. Model Fitting</a></li>
+  </ul></li>
+  <li><a href="#going-further-tips-organization" id="toc-going-further-tips-organization" class="nav-link" data-scroll-target="#going-further-tips-organization">Going Further: Tips &amp; Organization</a></li>
+  <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes">Notes</a></li>
   </ul>
-</nav>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="Practical-01-linear-model.pdf"><i class="bi bi-file-pdf"></i>Typst</a></li><li><a href="Practical-01-linear-model.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
 </div>
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Count Regression Practice</h1>
+<h1 class="title">Practical 1: Fit a Model to UPF Data</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Authors</div>
+    <div class="quarto-title-meta-contents">
+             <p>First author name goes here </p>
+             <p>You can have more than one author </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">June 13, 2025</p>
+    </div>
+  </div>
   
     
   </div>
@@ -3079,52 +3105,75 @@ vertical-align: -.125em;
 </header>
 
 
-<section id="data-air-quality" class="level2">
-<h2 class="anchored" data-anchor-id="data-air-quality">Data: Air Quality</h2>
-<section id="research-question" class="level4">
-<h4 class="anchored" data-anchor-id="research-question">Research Question</h4>
-<p>You will plan and fit a regression model with <code>cancer_cases</code> as the response variable.</p>
+<section id="this-file" class="level1">
+<h1>This File</h1>
+<p>This is a quarto file!</p>
+<p>This is the raw (.qmd source) version. Try clicking “Render” at the top to see the output (.html) version.</p>
+<p>What happens if you click the tiny black arrow next to “Render” and choose “Render typst” or “Render PDF” instead?</p>
+<p>The file has some grey chunks: everything in there is <strong>R code</strong>. All of the R code is run when you Render the file. If you want to run just one R code chunk, click the green arrow at its top right.</p>
+<p>The white part of the file is text (which of course you can edit).</p>
+<p>You can use the “Source” and “Visual” buttons at the top to toggle between source mode (code-y) and visual mode (more what-you-see-is-what-you’ll-get).</p>
+<p>You can <a href="https://quarto.org/docs/get-started/hello/rstudio.html">learn <em>alot</em> more about Quarto files</a> online.</p>
 </section>
-<section id="data-details" class="level4">
-<h4 class="anchored" data-anchor-id="data-details">Data Details</h4>
-<p>This dataset is inspired by ProPublica’s <a href="https://www.propublica.org/nerds/visualizing-toxic-air"><em>Visualizing Toxic Air</em></a> project. You might want to spend a few minutes exploring their interactive map before you dive in.</p>
-<p>You’ll have the opportunity to investigate cancer case rates in relation to air pollution sources, cancer risk factors, and demographics in Louisiana, perhaps replicating some of the results from Terrell and St Julien 2022, <a href="https://iopscience.iop.org/article/10.1088/1748-9326/ac4360#erlac4360s2">“Air pollution is linked to higher cancer rates among black or impoverished communities in Louisiana”</a>.</p>
-<p>The authors used publicly available data, but from a variety of sources that were not all clearly specified in the article; also, they state they had 750 rows of data, while in trying to re-create their dataset we ended up with a dataset only about 1/3 as large.</p>
-<p>Because of these differences, and also because the original analysis used incidence rates (a derived quantity based on case counts <em>plus</em> population size and demographics) where we will use the original counts, you should not expect to replicate the authors’ findings exactly. However, you might still use their paper as context and expert advice!</p>
-<p>You can obtain our data at: <a href="https://sldr.netlify.app/data/LA_cancer_data.csv" class="uri">https://sldr.netlify.app/data/LA_cancer_data.csv</a>.</p>
-<p>Variables in the dataset include:</p>
+<section id="overview" class="level1">
+<h1>Overview</h1>
+<p>How does eating a diet rich in ultra-processed foods affect our health? Previously, many people thought that the negative impacts of these foods were mainly because they contained unhealthy amounts of stuff like sugars, fat, carbs. But is that all, or is there something more going on? In <a href="https://doi.org/10.1016/j.cmet.2019.05.008">a recent paper</a>, Hall and colleagues set out to study this question via a randomized experiment so they could compare people eating processed and unprocessed foods (but with the same nutritional profile in terms of daily amounts of calories, sugar, fat, fiber, and macronutrients).</p>
+<p>The data you’ll analyze now is from their paper.</p>
+</section>
+<section id="data" class="level1">
+<h1>Data</h1>
+<p>You will <strong>choose <em>one</em> of two datasets</strong> about the effect of eating ultra-processed foods (UPF) on human health:</p>
 <ul>
-<li><p><code>state</code> (always “LA”)</p></li>
-<li><p><code>parish</code> in Louisiana (similar to a county)</p></li>
-<li><p><code>census_tract</code> (which gives the finer-scale geographic location)</p></li>
-<li><p>Number of <code>cancer_cases</code> per year in this census tract</p></li>
-<li><p><code>annual_population</code>, the number of people in the census tract</p></li>
-<li><p><code>median_age</code> of people in the census tract</p></li>
-<li><p>Demographic characteristics of the census tract: <code>percent_black</code>, <code>percent_poverty</code>, <code>percent_manufacturing</code> jobs, <code>percent_construction</code> jobs, <code>percent_smokers</code>, <code>percent_obese</code></p></li>
-<li><p>Air-pollution-related cancer risk estimates, based on air quality measurements and modeling (like you read about). Several values are provided for each census tract:</p></li>
-<li><p><code>point_cancer_risk</code> and <code>nonpoint_cancer_risk</code> in the original units used for the estimates, as well as</p></li>
-<li><p>scaled versions <code>relative_point_cancer_risk</code> and <code>relative_nonpoint_cancer_risk</code> with values <em>relative to</em> other LA census tracts</p></li>
+<li><p><a href="https://stacyderuiter.github.io/stat245-sp25/upf-daily-intake.html">UPF daily intakes</a> or</p></li>
+<li><p><a href="https://stacyderuiter.github.io/stat245-sp25/upf-by-diet.html">UPF by diet</a></p></li>
+</ul>
+<p>(Follow the links to obtain metadata and the URL for each dataset - note the links above are <em>not</em> to the data .csv files directly!)</p>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="tasks" class="level1">
+<h1>Tasks</h1>
+<section id="read-in-your-data" class="level2">
+<h2 class="anchored" data-anchor-id="read-in-your-data">1. Read in your data</h2>
+<p>Code to read in the dataset is provided on the dataset’s metadata page.</p>
+<p>Make sure you place it in an R code chunk! Here’s an empty one:</p>
+<p>If you need a new one, you can use the green “+C” box on the upper right to insert one in a Quarto file (choose the “R” type).</p>
+</section>
+<section id="plan-a-model" class="level2">
+<h2 class="anchored" data-anchor-id="plan-a-model">2. Plan a Model</h2>
+<p><strong>Consider how you would use linear regression to investigate the effects of UPF.</strong></p>
+<p>What response variable will you model? Suggestion: Try using weight gain or calorie intake (the real study’s two main outcome variables).</p>
+<p>Try to include all the predictors you honestly think will impact the response, up to the maximum the dataset can support.</p>
+<p>Make some notes in the text part of this file to provide a rationale for your choices based on the size of the dataset and what you know about the data and the research question.</p>
+</section>
+<section id="optional-graphics-data-exploration" class="level2">
+<h2 class="anchored" data-anchor-id="optional-graphics-data-exploration">3. Optional: Graphics &amp; Data Exploration</h2>
+<p><em>We haven’t taught you graphics. Skip this part if you don’t already know how to make graphs in R…or envision something and ask for help to make it happen!</em></p>
+<p><strong>Create at least one visualization (graph)</strong> to explore relationships between your response and one or more predictors. Design a graph that can tell a story or provide an insight relevant to the model you have planned, and include in your report a few sentences explaining…</p>
+<ul>
+<li><p>your design choices (graph type, use of color, labels, etc.) and</p></li>
+<li><p>what you learn from your graph (what’s the initial answer to your research question?).</p></li>
 </ul>
 </section>
+<section id="model-fitting" class="level2">
+<h2 class="anchored" data-anchor-id="model-fitting">4. Model Fitting</h2>
+<p><strong>Use <code>lm()</code> to fit the linear regression model you have planned</strong> in R. Don’t forget to assign a name to the fitted model object!</p>
+<p>Then, show the model’s <code>summary()</code>.</p>
+<p>Consider showing the model equation – you might hand-write it; or, you may use the examples in <a href="https://applied-regression.netlify.app/quarto/math-notation">our online reference guide</a> to learn how to typeset it properly (Greek letters, subscripts and all) right in your Quarto file.</p>
 </section>
-<section id="tasks" class="level2">
-<h2 class="anchored" data-anchor-id="tasks">Tasks</h2>
-<ol type="1">
-<li><strong>Plan:</strong> Articulate your model plan for the model you will fit to your chosen dataset. You’ll likely want to identify one predictor variable that is of most interest to you in your analysis (to focus on in Question 5). Provide a rationale to explain which variables will/won’t be included in your model, and why. Note whether or not you included an offset (with a brief rationale). Consider whether you will include any interactions, too! Support your rationale with reference to the size of the dataset and our model planning checklist.</li>
-<li><strong>Explore</strong> Read your data into R and make a one well-designed exploratory plot of the data that is relevant to your research question - so, probably, including the response variable and at least your key predictor. (In a real analysis we’d make more…but that takes time.) Make a note of A) Any design choices (type of graph, use of color, etc.) and B) Any patterns you see in the graph.</li>
-<li><strong>Fit</strong> a regression model that is consistent with your model plan. Show its <code>summary()</code>. (Equation is optional - we will rely more on prediction plots more from now on.) Consider whether your model should include an offset or not.</li>
-<li><strong>Assess</strong> your model. Show all your work:
+</section>
+<section id="going-further-tips-organization" class="level1">
+<h1>Going Further: Tips &amp; Organization</h1>
 <ul>
-<li>First, state the conditions you need to check.</li>
-<li>For any graph you present, state…
-<ul>
-<li>which condition(s) you are checking,</li>
-<li>whether the condition(s) are met, and</li>
-<li>how you know (clearly describing the evidence you see in the plot).</li>
-</ul></li>
-</ul></li>
-<li><strong>Conclusions</strong> Based on the model assessment and selection results plus the prediction plot, what can you conclude about the relationship between your key predictor of interest and the number of cancer cases? <em>Are</em> they associated and if so what’s the size and direction of the effect?</li>
-</ol>
+<li><p>Ensure that your file has an appropriate title and has your name on it. You can edit these in the first few lines of the Quarto file. Be careful up there: a misplaced space or deleted quotation mark will cause big trouble.</p></li>
+<li><p>Use section and subsection headers as needed to guide the reader through your work. The fewer hashtags there are, the larger the header.</p></li>
+<li><p>Consider deleting instructions and keeping just your own interpretation and explanations.</p></li>
+<li><p>Make sure no R code goes off the edge of the page in the rendered file (if needed, you can put line breaks after any comma or plus sign).</p></li>
+<li><p>Make sure your setup chunk (with the <code>library()</code> calls) includes the initial line: <code>#| include: false</code>. This prevents undesirable garbage messages resulting from the <code>library()</code> calls from being shown in your rendered file.</p></li>
+</ul>
+</section>
+<section id="notes" class="level1">
+<h1>Notes</h1>
+<p><em>You may feel this analysis is incomplete, or be wondering, “What does this all mean, what conclusion can we draw?” You are right! We will keep working and learning and you’ll update your results next time.</em></p>
 </section>
 
 </main>

@@ -6,9 +6,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content>
+<meta name="author" content="First author name goes here">
+<meta name="author" content="You can have more than one author">
+<meta name="dcterms.date" content="2025-06-13">
 
-<title>UPFs (Part 3)</title>
+<title>Practical 4: Binary Regression Modeling Practice</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +21,40 @@ ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
 width: 0.8em;
 margin: 0 0.8em 0.2em -1em;  vertical-align: middle;
+}
+
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+}
+pre.numberSource { margin-left: 3em; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -3054,34 +3090,45 @@ vertical-align: -.125em;
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#instructions" id="toc-instructions" class="nav-link active" data-scroll-target="#instructions">Instructions</a>
+  <li><a href="#data-housing-loans" id="toc-data-housing-loans" class="nav-link active" data-scroll-target="#data-housing-loans">Data: Housing Loans</a>
   <ul class="collapse">
+  <li><a href="#research-question" id="toc-research-question" class="nav-link" data-scroll-target="#research-question">Research Question</a></li>
+  <li><a href="#data-details" id="toc-data-details" class="nav-link" data-scroll-target="#data-details">Data Details</a></li>
+  <li><a href="#minimal-data-prep" id="toc-minimal-data-prep" class="nav-link" data-scroll-target="#minimal-data-prep">Minimal Data Prep</a></li>
+  <li><a href="#optional-more-advanced-data-prep" id="toc-optional-more-advanced-data-prep" class="nav-link" data-scroll-target="#optional-more-advanced-data-prep">(Optional) More Advanced Data Prep</a></li>
+  </ul></li>
   <li><a href="#tasks" id="toc-tasks" class="nav-link" data-scroll-target="#tasks">Tasks</a>
   <ul class="collapse">
-  <li><a href="#model-plan-should-be-already-done" id="toc-model-plan-should-be-already-done" class="nav-link" data-scroll-target="#model-plan-should-be-already-done">Model Plan (should be already done)</a></li>
-  <li><a href="#data-exploration-should-be-already-done" id="toc-data-exploration-should-be-already-done" class="nav-link" data-scroll-target="#data-exploration-should-be-already-done">Data Exploration (should be already done)</a></li>
-  <li><a href="#fit-your-model-should-be-already-done" id="toc-fit-your-model-should-be-already-done" class="nav-link" data-scroll-target="#fit-your-model-should-be-already-done">Fit your model (should be already done)</a></li>
-  <li><a href="#model-assessment-should-be-already-done" id="toc-model-assessment-should-be-already-done" class="nav-link" data-scroll-target="#model-assessment-should-be-already-done">Model Assessment (should be already done)</a></li>
-  <li><a href="#prediction-plot" id="toc-prediction-plot" class="nav-link" data-scroll-target="#prediction-plot">Prediction Plot</a></li>
-  <li><a href="#making-inferences-model-selection" id="toc-making-inferences-model-selection" class="nav-link" data-scroll-target="#making-inferences-model-selection">Making inferences (Model Selection)</a></li>
-  <li><a href="#conclusions-interpretation" id="toc-conclusions-interpretation" class="nav-link" data-scroll-target="#conclusions-interpretation">Conclusions &amp; Interpretation</a></li>
-  </ul></li>
+  <li><a href="#hint" id="toc-hint" class="nav-link" data-scroll-target="#hint">BIG HINT: The Markup’s analysis</a></li>
   </ul></li>
   </ul>
-</nav>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="Practical-04-binary-model.pdf"><i class="bi bi-file-pdf"></i>Typst</a></li><li><a href="Practical-04-binary-model.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
 </div>
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">UPFs (Part 3)</h1>
+<h1 class="title">Practical 4: Binary Regression Modeling Practice</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Authors</div>
+    <div class="quarto-title-meta-contents">
+             <p>First author name goes here </p>
+             <p>You can have more than one author </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">June 13, 2025</p>
+    </div>
+  </div>
   
     
   </div>
@@ -3091,64 +3138,143 @@ vertical-align: -.125em;
 </header>
 
 
-<section id="instructions" class="level1">
-<h1>Instructions</h1>
-<p>This is (another) continuation of our analysis of the UPF data - the final one.</p>
-<p>You will make additions and modifications to your previous work to get an improved and expanded final version.</p>
-<p>What you will add this time will be <strong>inference</strong> and a <strong>final conclusions statement</strong> interpreting your work.</p>
-<section id="tasks" class="level2">
-<h2 class="anchored" data-anchor-id="tasks">Tasks</h2>
-<section id="model-plan-should-be-already-done" class="level3">
-<h3 class="anchored" data-anchor-id="model-plan-should-be-already-done">Model Plan (should be already done)</h3>
-<p>State the question you are trying to answer with your analysis, making it as easy to understand as possible but also as specific as possible (so a reader can tell just from the question which response and predictor(s) will be in the model). Provide a rationale that justifies the predictor and response variables you will include in (or exclude from!) your model, based on our <a href="https://stacyderuiter.github.io/stat245-sp25/model-plan-checklist.pdf">model planning checklist</a> and the size of the dataset.</p>
-<p>Reconsider too: should your model include any interactions?</p>
+<section id="data-housing-loans" class="level1">
+<h1>Data: Housing Loans</h1>
+<section id="research-question" class="level2">
+<h2 class="anchored" data-anchor-id="research-question">Research Question</h2>
+<p>Your goal is to plan and fit a regression model with <code>action_taken</code> as the response variable (using all data or Kent County only - you choose). You may choose predictors to match the analysis in <a href="https://themarkup.org/denied/2021/08/25/the-secret-bias-hidden-in-mortgage-approval-algorithms">an analysis of similar nationwide data by <em>The Markup</em></a> (see BIG HINT below), or if you prefer, make your own plan.</p>
 </section>
-<section id="data-exploration-should-be-already-done" class="level3">
-<h3 class="anchored" data-anchor-id="data-exploration-should-be-already-done">Data Exploration (should be already done)</h3>
-<p>You might want to include here the data plot you made before. If you’ve changed your research question, consider updating your exploratory graph so it shows the predictor and response you are most interested in.</p>
-</section>
-<section id="fit-your-model-should-be-already-done" class="level3">
-<h3 class="anchored" data-anchor-id="fit-your-model-should-be-already-done">Fit your model (should be already done)</h3>
-<p>Fit your model, showing the code used to fit the model, the model <code>summary()</code>.</p>
-<p>Consider writing down the model equation. You might hand-write it; or, you may use the examples in <a href="https://applied-regression.netlify.app/quarto/math-notation">our online reference guide</a> to learn how to typeset it properly (Greek letters, subscripts and all) right in your Quarto file.</p>
-</section>
-<section id="model-assessment-should-be-already-done" class="level3">
-<h3 class="anchored" data-anchor-id="model-assessment-should-be-already-done">Model Assessment (should be already done)</h3>
-<p>Carry out model assessment for your model.</p>
-<p>You should show at least:</p>
+<section id="data-details" class="level2">
+<h2 class="anchored" data-anchor-id="data-details">Data Details</h2>
+<p>This data is from HDMA, on mortgage approvals in Michigan in 2020. It is similar to, but not the same as, the data analyzed by The Markup.</p>
+<p>The data were obtained from <a href="https://ffiec.cfpb.gov/data-browser/" class="uri">https://ffiec.cfpb.gov/data-browser/</a> and pre-processed to make the file size smaller, and to filtering the data like <a href="https://themarkup.org/denied/2021/08/25/the-secret-bias-hidden-in-mortgage-approval-algorithms">The Markup</a> did to include potential borrowers meeting conditions:</p>
 <ul>
-<li>A residuals vs fitted plot</li>
-<li>A histogram of the residuals</li>
-<li>An ACF plot</li>
+<li>Conventional mortgage only</li>
+<li>For purpose of home purchase</li>
+<li>1- to 4-family home</li>
+<li>Site-built (not manufactured/mobile home)</li>
+<li>Not for business purpose</li>
+<li>“First lien” status</li>
+<li>Loan approved (“originated”) or denied</li>
 </ul>
-<p>For each one, state:</p>
+<p>The code below reads in the data, and also does a bit of data wrangling that will be useful (you don’t have to understand details or be able to replicate this).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>hdma_mi_20 <span class="ot">&lt;-</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">read_csv</span>(<span class="st">&#39;https://sldr.netlify.app/data/hdma-mi-20.csv&#39;</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># race variable combining rare groups</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">derived_race =</span> <span class="fu">case_when</span>(</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>      derived_race <span class="sc">==</span> <span class="st">&#39;White&#39;</span> <span class="sc">~</span> <span class="st">&#39;White&#39;</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>      derived_race <span class="sc">==</span> <span class="st">&#39;Black or African American&#39;</span> <span class="sc">~</span> <span class="st">&#39;Black or African American&#39;</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>      derived_race <span class="sc">==</span> <span class="st">&#39;Asian&#39;</span> <span class="sc">~</span> <span class="st">&#39;Asian&#39;</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>      derived_race <span class="sc">==</span> <span class="st">&#39;Race Not Available&#39;</span> <span class="sc">~</span> <span class="st">&#39;Race Not Available&#39;</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">&#39;Other&#39;</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># make sure values of numeric values are numbers</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">loan_to_value_ratio =</span> <span class="fu">parse_number</span>(loan_to_value_ratio),</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">property_value =</span> <span class="fu">parse_number</span>(property_value),</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">loan_term =</span> <span class="fu">parse_number</span>(loan_term),</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># whether there is a co-applicant</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">co_applicant =</span> <span class="fu">ifelse</span>(<span class="st">`</span><span class="at">co-applicant_ethnicity-1</span><span class="st">`</span> <span class="sc">==</span> <span class="dv">5</span>, <span class="st">&#39;No&#39;</span>, <span class="st">&#39;Yes&#39;</span>),</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># service underwriting the mortgage</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">aus =</span> <span class="fu">case_when</span>(<span class="st">`</span><span class="at">aus-1</span><span class="st">`</span> <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="st">&#39;Desktop Underwriter (DU)&#39;</span>,</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>                    <span class="st">`</span><span class="at">aus-1</span><span class="st">`</span> <span class="sc">==</span> <span class="dv">2</span> <span class="sc">~</span> <span class="st">&#39;Loan Prospector (LP) or Loan Product Advisor&#39;</span>,</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>                    <span class="st">`</span><span class="at">aus-1</span><span class="st">`</span> <span class="sc">==</span> <span class="dv">1111</span> <span class="sc">~</span> <span class="st">&#39;Exempt&#39;</span>,</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>                    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">&#39;Other&#39;</span>),</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># unknown age is encoded as &quot;8888&quot;</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">applicant_age =</span> <span class="fu">ifelse</span>(applicant_age <span class="sc">==</span> <span class="st">&#39;8888&#39;</span>, <span class="cn">NA</span>, applicant_age)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: There were 3 warnings in `mutate()`.
+The first warning was:
+ℹ In argument: `loan_to_value_ratio = parse_number(loan_to_value_ratio)`.
+Caused by warning:
+! 3489 parsing failures.
+ row col expected actual
+  77  -- a number Exempt
+9067  -- a number Exempt
+9068  -- a number Exempt
+9069  -- a number Exempt
+9070  -- a number Exempt
+.... ... ........ ......
+See problems(...) for more details.
+ℹ Run `dplyr::last_dplyr_warnings()` to see the 2 remaining warnings.</code></pre>
+</div>
+</div>
+<p><em>the warnings about “parsing failures” are ok: those are cases where numeric variables had non-numeric contents which R failed to convert to numbers (this was expected).</em></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Limit to only Kent County (where Calvin is located), if desired</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>hdma_kent_20 <span class="ot">&lt;-</span> hdma_mi_20 <span class="sc">|&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(county_code <span class="sc">==</span> <span class="dv">26081</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># at the county scale, it is very rare </span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># for race to be known and sex to be unknown</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># and this causes trouble...so remove cases where sex is not known</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(derived_sex <span class="sc">!=</span> <span class="st">&#39;Sex Not Available&#39;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="minimal-data-prep" class="level2">
+<h2 class="anchored" data-anchor-id="minimal-data-prep">Minimal Data Prep</h2>
+<p>Note that in this housing dataset, many categorical variables are stored as numeric codes.</p>
+<p><strong>Even if you don’t want to do <em>any</em> additional data prep, make sure you <code>factor()</code> your response variable,</strong> plus any <strong><code>factor()</code> any other</strong> <em>categorical</em> <strong>predictors</strong> you want to use in your model<strong>, so they are not treated as numeric data.</strong></p>
+<p>Something like:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>hdma_mi_20 <span class="ot">&lt;-</span> hdma_mi_20 <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">my_response_variable =</span> <span class="fu">factor</span>(my_response_variable),</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">my_predictor_1 =</span> <span class="fu">factor</span>(my_predictor_1),</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">my_predictor_2 =</span> <span class="fu">factor</span>(my_predictor_2)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>         <span class="co"># (repeat above for as many categorical predictors as you need to use)</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="optional-more-advanced-data-prep" class="level2">
+<h2 class="anchored" data-anchor-id="optional-more-advanced-data-prep">(Optional) More Advanced Data Prep</h2>
+<p>If you want to do more…ask a helper!</p>
+<p>You can find a list of variable definitions and codes used in the variables in the dataset at:</p>
+<p><a href="https://ffiec.cfpb.gov/documentation/publications/loan-level-datasets/lar-data-fields" class="uri">https://ffiec.cfpb.gov/documentation/publications/loan-level-datasets/lar-data-fields</a> (search and find is your friend!)</p>
+<p>Ideally you will create and use variables where the category labels are intelligible words rather than numeric codes! You may also need to rename variables that have “-” in the names - refer to the “old/bad” names in back-ticks like: `bad-variable-name`. For detailed examples on how to rename and reorganize this dataset for use, see: <a href="https://stacyderuiter.github.io/stat245-sp25/housing-wrangling.html" class="uri">https://stacyderuiter.github.io/stat245-sp25/housing-wrangling.html</a>.</p>
+</section>
+</section>
+<section id="tasks" class="level1">
+<h1>Tasks</h1>
+<ol type="1">
+<li><strong>Plan:</strong> Articulate your model plan. You may do this one of two ways:
+<ol type="A">
+<li>Make your own plan, considering dataset size and maybe a causal diagram; <strong>or,</strong></li>
+<li>To replicate (as closely as possible) the model fitted in the analysis by <a href="https://themarkup.org/denied/2021/08/25/the-secret-bias-hidden-in-mortgage-approval-algorithms">The Markup</a>, relying on their expertise in this field. <em>To do this: See</em> the “BIG HINT” <em>below.</em></li>
+</ol></li>
+<li><strong>(Optional) Explore</strong> Read your data into R and make a one well-designed exploratory plot of the data that is relevant to your research question. Make note of any patterns you see in the graph.</li>
+<li><strong>Fit</strong> a regression model that is consistent with your model plan. Show its <code>summary()</code>.</li>
+</ol>
 <ul>
-<li>Which condition(s) it helps you to check</li>
-<li>Whether you think the condition(s) are met or not</li>
-<li>What specific evidence you saw in the plot that allowed you to make your decision about whether the condition was met. <em>Example: “This histogram of the residuals shows that the residual normality condition is met, since the distribution of residuals is quite unimodal and mostly symmetric, with only slight right skew and no major outliers.”</em></li>
+<li>Note: depending on the dataset and predictors you use, you may well run into model-fitting warnings. <em>Don’t ignore these warnings</em>; work with your team or instructors to solve them!</li>
 </ul>
-<p>At the end, make note of your overall conclusion: If <strong>all</strong> conditions are met then the model passes assessment and can be used to draw conclusions; if <em>any</em> condition is not met, then you <em>cannot</em> actually draw valid conclusion from this model.</p>
-</section>
-<section id="prediction-plot" class="level3">
-<h3 class="anchored" data-anchor-id="prediction-plot">Prediction Plot</h3>
-<p>Make a prediction plot for your main predictor of interest.</p>
-<p>Include in your text a brief statement of what the plot shows technically (you don’t need to interpret what it means yet): For example, “The figure above shows model predictions illustrating how [response] is associated with [key predictor]. The shaded area [or the errorbars] shows a 95% confidence interval. <strong>To make these predictions, [other predictors] were held constant at [state the constant values that you used for predictors not shown in the plot].</strong>” (Don’t forget that last part, stating the constant values!)</p>
-</section>
-<section id="making-inferences-model-selection" class="level3">
-<h3 class="anchored" data-anchor-id="making-inferences-model-selection">Making inferences (Model Selection)</h3>
-<p>Make appropriate calculations (you might use ANOVA <strong>or</strong> AIC <strong>or</strong> BIC: but just choose <em>one!)</em> that will help you make an inference about whether your key predictor of interest is <em>really</em> associated with your response.</p>
-<p>Show the code you use and the R output. (You will interpret the results in the Conclusions part.)</p>
-</section>
-<section id="conclusions-interpretation" class="level3">
-<h3 class="anchored" data-anchor-id="conclusions-interpretation">Conclusions &amp; Interpretation</h3>
-<p>Explain the answer to your question of interest (whether your main predictor is <em>really</em> associated with your response). For a complete answer, you’ll need to talk about:</p>
+<ol start="4" type="1">
+<li><strong>Assess</strong> your model, showing all your work: clearly state which condition you’re checking, whether it’s met, and what evidence supports your decision.</li>
+<li>State your <strong>conclusions</strong> about the relationship between your key predictor of interest and the response. To support your answer, you might refer to <strong>model comparison/selection</strong> results, <strong>model assessment</strong> (to confirm results are trustworthy) and maybe a <strong>prediction plot</strong> or data graph to describe effect size/direction.</li>
+</ol>
+<section id="hint" class="level2">
+<h2 class="anchored" data-anchor-id="hint">BIG HINT: The Markup’s analysis</h2>
+<p>In the article we recently read, a box was included linking to a detailed description of the methods Markup analysts used to obtain their results. They state that “Our national model for conventional applications contained 17 variables:</p>
 <ul>
-<li><p>Model assessment outcome (is the model appropriate, so that we <em>can</em> rely on it to provide trustworthy conclusions?)</p></li>
-<li><p>Your prediction plot (what does it tell you about the relationship between your predictor and response – size and direction of effect?)</p></li>
-<li><p>Your model selection results (what do they tell you about the relationship between your predictor and the response – <em>is</em> there an association, or is it plausible there’s really no relationship?)</p></li>
+<li><p>Race (our variables <code>derived_race</code> and/or <code>derived_ethnicity</code>)</p></li>
+<li><p>Sex (our variable <code>derived_sex</code>)</p></li>
+<li><p>Whether the application had a co-applicant (<code>co_applicant</code>)</p></li>
+<li><p>Age (<code>applicant_age</code>)</p></li>
+<li><p>Income (<code>income</code>)</p></li>
+<li><p>Loan amount (<code>loan_amount</code>)</p></li>
+<li><p>Property value (<code>property_value</code>)</p></li>
+<li><p>Mortgage term (<code>loan_term</code>, in months)</p></li>
+<li><p>Credit model used (<code>applicant_credit_score_type</code>)</p></li>
+<li><p>Debt-to-income ratio (<code>debt_to_income_ratio</code>)</p></li>
+<li><p>Combined loan-to-value ratio (<code>loan_to_value_ratio</code>)</p></li>
+<li><p>The automated underwriting system used (<code>aus</code>)</p></li>
+<li><p>The ratio between the median income of the census tract where the property is located and the median income of the metro area (<strong><em>not available to us)</em></strong></p></li>
+<li><p>The type of lender (added variable to HMDA data) (<strong><em>not available to us)</em></strong></p></li>
+<li><p>The size of the lender (added variable to HMDA data) (<strong><em>not available to us)</em></strong></p></li>
+<li><p>Non-Hispanic White population percentage of the census tract where the property is located (added variable to HMDA data) (<strong><em>not available to us)</em></strong></p></li>
+<li><p>Size of the metro area where the property is located (added variable to HMDA data) (<strong><em>not available to us)</em></strong></p></li>
 </ul>
-<p><em>Note, if your model doesn’t pass assessment, you won’t be able to draw real conclusions; in a real analysis you’d refine the approach until all conditions were met, but you might not have time to do that today. Yet you can still interpret (for practice) what the prediction plot and selection</em> would <em>lead you to conclude,</em> IF <em>the model had passed assessment!</em></p>
-</section>
 </section>
 </section>
 

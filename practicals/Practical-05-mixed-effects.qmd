@@ -1,0 +1,51 @@
+---
+title: "Practical 5: Mixed-Effect Models"
+author: 
+  - First author name goes here
+  - You can have more than one author
+date: "June 13, 2025"
+format: 
+  html:
+    toc: true
+    code-copy: true
+    embed-resources: true
+  typst: default
+  pdf: default
+editor: source
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(tidyverse)
+library(ggformula)
+library(glmmTMB)
+library(ggeffects)
+```
+
+# Instructions
+
+Your goal is to practice fitting a mixed-effects model (a model with one or more random effects).
+
+## Choose a Dataset
+
+To begin, consider the datasets you've worked on so far in earlier sessions. Which one of them might you want to try adding random effect(s) to? It might be one where...
+
+- Your fitted model failed assessment because of a problem with residual independence; or,
+- You noticed a predictor variable that is a good candidate for a random effect.
+
+If you are bold and ambitious, you might instead consider trying to fit a model (with at least one random effect) to a dataset of your own or a publicly available dataset you work with (that you have easy access to).
+
+If you have time, you can try more than one option!
+
+If you want a fresh dataset to try, we have those too (just ask).
+
+And bear in mind: not *every* regression model *needs* to be a mixed-effects model (so if you really think there aren't any random effect variable candidates in your dataset, you may be right!).
+
+## Tasks
+
+Plan, fit, assess and interpret a revised model with at least one random intercept included.
+
+What do you notice? Any differences from before?
+
+If you decide to show prediction plots from the model, consider talking with an instructor about interpretation (which is subtly different).

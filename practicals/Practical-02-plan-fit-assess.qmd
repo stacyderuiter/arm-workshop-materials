@@ -1,11 +1,16 @@
 ---
-title: "UPFs (Part 2)"
-author: ""
+title: "Practical 2: Plan, Fit, Assess your UPF Model (Part 2)"
+author: 
+  - First author name goes here
+  - You can have more than one author
+date: "June 13, 2025"
 format: 
   html:
     toc: true
     code-copy: true
     embed-resources: true
+  typst: default
+  pdf: default
 editor: source
 ---
 
@@ -21,25 +26,25 @@ knitr::opts_chunk$set(echo = TRUE,
 theme_set(theme_minimal(base_size = 16))
 ```
 
-# Instructions
+# Overview
 
 This is a continuation of our last activity.
 
-You will make additions and modifications to your previous work to get an improved and expanded version.
+You will make additions and modifications to your previous Quarto file to get an improved and expanded version.
 
-## Tasks
+# Tasks
 
-### Planning a Model
+## 1. (Re)-Planning a Model
 
-Keep the same response variable you began with last week.
+Keep the same response variable you began with last time.
 
 But, now you know more about **model planning**!
 
 -   As you make your plan, focus on one response variable of your choice, and one key predictor variable of your choice. This predictor will be the one you would most like to make conclusions about to decide whether it's *really* associated with your response variable.
 
--   Go through our [model planning checklist](https://stacyderuiter.github.io/stat245-fa24/model-plan-checklist.pdf) to identify any othe variable that are confounders, colliders, moderators, or in mediation chains relative to your main key predictor. Based on your results, decide which predictors should be included in your model. Explain all your choices in the text of your report.
+-   Consider making a causal diagram and/or using a [model planning checklist](https://stacyderuiter.github.io/stat245-fa24/model-plan-checklist.pdf) to identify any other variable that are confounders, colliders, moderators, or in mediation chains relative to your main key predictor. Based on your results, decide which predictors should be included in your model. 
 
-Tips and notes:
+### Tips and notes:
 
 -   The $\frac{n}{15}$ rule of thumb still gives you a limit for the *maximum* number of parameters you can estimate (and don't forget: categorical predictors require not just ONE parameter, but "number of categories minus one" parameters!
 
@@ -47,7 +52,7 @@ Tips and notes:
 
 -  You might draw a causal diagram by hand on paper or on a whiteboard. Or, you may use an online tools such as (for example) <https://www.drawio.com/doc/getting-started-basic-flow-chart>.  Check with an instructor if you want to include the image right in your Quarto file!
 
-### Fit your (new) model
+## 2. Fit your (new) model
 
 Fit the model you just planned.
 
@@ -55,7 +60,7 @@ Show the code used to fit the model and the model `summary()`.
 
 Consider showing the model equation -- you might hand-write it; or, you may use the examples in [our online reference guide](https://applied-regression.netlify.app/quarto/math-notation) to learn how to typeset it properly (Greek letters, subscripts and all) right in your Quarto file.
 
-### Model Assessment
+## 3. Model Assessment
 
 Carry out model assessment for your (new) model.
 
@@ -69,7 +74,7 @@ For each graph, make sure you state:
 
 -   Which condition(s) it helps you to check
 -   Whether you think the condition(s) are met or not
--   What specific evidence you saw in the plot that allowed you to make your decision about whether the condition was met. *Example: "This histogram of the residuals shows that the residual normality condition is met, since the distribution of residuals is quite unimodal and mostly symmetric, with only slight right skew and no major outliers."*
+-   What specific evidence you saw in the plot that allowed you to make your decision about whether the condition was met. 
 
 At the end, make an overall conclusion: If **all** conditions are met then the model passes assessment and can be used to draw conclusions; if *any* condition is not met, then you *cannot* actually draw valid conclusions from this model.
 

@@ -10,7 +10,7 @@
 <meta name="author" content="You can have more than one author">
 <meta name="dcterms.date" content="2025-06-13">
 
-<title>Practical 1: Fit a Model to UPF Data</title>
+<title>Practical 5: Mixed-Effect Models</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -3056,26 +3056,19 @@ vertical-align: -.125em;
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#this-file" id="toc-this-file" class="nav-link active" data-scroll-target="#this-file">This File</a></li>
-  <li><a href="#overview" id="toc-overview" class="nav-link" data-scroll-target="#overview">Overview</a></li>
-  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
-  <li><a href="#tasks" id="toc-tasks" class="nav-link" data-scroll-target="#tasks">Tasks</a>
+  <li><a href="#instructions" id="toc-instructions" class="nav-link active" data-scroll-target="#instructions">Instructions</a>
   <ul class="collapse">
-  <li><a href="#read-in-your-data" id="toc-read-in-your-data" class="nav-link" data-scroll-target="#read-in-your-data">1. Read in your data</a></li>
-  <li><a href="#plan-a-model" id="toc-plan-a-model" class="nav-link" data-scroll-target="#plan-a-model">2. Plan a Model</a></li>
-  <li><a href="#optional-graphics-data-exploration" id="toc-optional-graphics-data-exploration" class="nav-link" data-scroll-target="#optional-graphics-data-exploration">3. Optional: Graphics &amp; Data Exploration</a></li>
-  <li><a href="#model-fitting" id="toc-model-fitting" class="nav-link" data-scroll-target="#model-fitting">4. Model Fitting</a></li>
+  <li><a href="#choose-a-dataset" id="toc-choose-a-dataset" class="nav-link" data-scroll-target="#choose-a-dataset">Choose a Dataset</a></li>
+  <li><a href="#tasks" id="toc-tasks" class="nav-link" data-scroll-target="#tasks">Tasks</a></li>
   </ul></li>
-  <li><a href="#going-further-tips-organization" id="toc-going-further-tips-organization" class="nav-link" data-scroll-target="#going-further-tips-organization">Going Further: Tips &amp; Organization</a></li>
-  <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes">Notes</a></li>
   </ul>
-<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="lm-UPFs-1.pdf"><i class="bi bi-file-pdf"></i>Typst</a></li><li><a href="lm-UPFs-1.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="Practical-05-mixed-effects.pdf"><i class="bi bi-file-pdf"></i>Typst</a></li><li><a href="Practical-05-mixed-effects.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
 </div>
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Practical 1: Fit a Model to UPF Data</h1>
+<h1 class="title">Practical 5: Mixed-Effect Models</h1>
 </div>
 
 
@@ -3105,75 +3098,27 @@ vertical-align: -.125em;
 </header>
 
 
-<section id="this-file" class="level1">
-<h1>This File</h1>
-<p>This is a quarto file!</p>
-<p>This is the raw (.qmd source) version. Try clicking “Render” at the top to see the output (.html) version.</p>
-<p>What happens if you click the tiny black arrow next to “Render” and choose “Render typst” or “Render PDF” instead?</p>
-<p>The file has some grey chunks: everything in there is <strong>R code</strong>. All of the R code is run when you Render the file. If you want to run just one R code chunk, click the green arrow at its top right.</p>
-<p>The white part of the file is text (which of course you can edit).</p>
-<p>You can use the “Source” and “Visual” buttons at the top to toggle between source mode (code-y) and visual mode (more what-you-see-is-what-you’ll-get).</p>
-<p>You can <a href="https://quarto.org/docs/get-started/hello/rstudio.html">learn <em>alot</em> more about Quarto files</a> online.</p>
-</section>
-<section id="overview" class="level1">
-<h1>Overview</h1>
-<p>How does eating a diet rich in ultra-processed foods affect our health? Previously, many people thought that the negative impacts of these foods were mainly because they contained unhealthy amounts of stuff like sugars, fat, carbs. But is that all, or is there something more going on? In <a href="https://doi.org/10.1016/j.cmet.2019.05.008">a recent paper</a>, Hall and colleagues set out to study this question via a randomized experiment so they could compare people eating processed and unprocessed foods (but with the same nutritional profile in terms of daily amounts of calories, sugar, fat, fiber, and macronutrients).</p>
-<p>The data you’ll analyze now is from their paper.</p>
-</section>
-<section id="data" class="level1">
-<h1>Data</h1>
-<p>You will <strong>choose <em>one</em> of two datasets</strong> about the effect of eating ultra-processed foods (UPF) on human health:</p>
+<section id="instructions" class="level1">
+<h1>Instructions</h1>
+<p>Your goal is to practice fitting a mixed-effects model (a model with one or more random effects).</p>
+<section id="choose-a-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="choose-a-dataset">Choose a Dataset</h2>
+<p>To begin, consider the datasets you’ve worked on so far in earlier sessions. Which one of them might you want to try adding random effect(s) to? It might be one where…</p>
 <ul>
-<li><p><a href="https://stacyderuiter.github.io/stat245-sp25/upf-daily-intake.html">UPF daily intakes</a> or</p></li>
-<li><p><a href="https://stacyderuiter.github.io/stat245-sp25/upf-by-diet.html">UPF by diet</a></p></li>
+<li>Your fitted model failed assessment because of a problem with residual independence; or,</li>
+<li>You noticed a predictor variable that is a good candidate for a random effect.</li>
 </ul>
-<p>(Follow the links to obtain metadata and the URL for each dataset - note the links above are <em>not</em> to the data .csv files directly!)</p>
-<div style="page-break-after: always;"></div>
+<p>If you are bold and ambitious, you might instead consider trying to fit a model (with at least one random effect) to a dataset of your own or a publicly available dataset you work with (that you have easy access to).</p>
+<p>If you have time, you can try more than one option!</p>
+<p>If you want a fresh dataset to try, we have those too (just ask).</p>
+<p>And bear in mind: not <em>every</em> regression model <em>needs</em> to be a mixed-effects model (so if you really think there aren’t any random effect variable candidates in your dataset, you may be right!).</p>
 </section>
-<section id="tasks" class="level1">
-<h1>Tasks</h1>
-<section id="read-in-your-data" class="level2">
-<h2 class="anchored" data-anchor-id="read-in-your-data">1. Read in your data</h2>
-<p>Code to read in the dataset is provided on the dataset’s metadata page.</p>
-<p>Make sure you place it in an R code chunk! Here’s an empty one:</p>
-<p>If you need a new one, you can use the green “+C” box on the upper right to insert one in a Quarto file (choose the “R” type).</p>
+<section id="tasks" class="level2">
+<h2 class="anchored" data-anchor-id="tasks">Tasks</h2>
+<p>Plan, fit, assess and interpret a revised model with at least one random intercept included.</p>
+<p>What do you notice? Any differences from before?</p>
+<p>If you decide to show prediction plots from the model, consider talking with an instructor about interpretation (which is subtly different).</p>
 </section>
-<section id="plan-a-model" class="level2">
-<h2 class="anchored" data-anchor-id="plan-a-model">2. Plan a Model</h2>
-<p><strong>Consider how you would use linear regression to investigate the effects of UPF.</strong></p>
-<p>What response variable will you model? Suggestion: Try using weight gain or calorie intake (the real study’s two main outcome variables).</p>
-<p>Try to include all the predictors you honestly think will impact the response, up to the maximum the dataset can support.</p>
-<p>Make some notes in the text part of this file to provide a rationale for your choices based on the size of the dataset and what you know about the data and the research question.</p>
-</section>
-<section id="optional-graphics-data-exploration" class="level2">
-<h2 class="anchored" data-anchor-id="optional-graphics-data-exploration">3. Optional: Graphics &amp; Data Exploration</h2>
-<p><em>We haven’t taught you graphics. Skip this part if you don’t already know how to make graphs in R…or envision something and ask for help to make it happen!</em></p>
-<p><strong>Create at least one visualization (graph)</strong> to explore relationships between your response and one or more predictors. Design a graph that can tell a story or provide an insight relevant to the model you have planned, and include in your report a few sentences explaining…</p>
-<ul>
-<li><p>your design choices (graph type, use of color, labels, etc.) and</p></li>
-<li><p>what you learn from your graph (what’s the initial answer to your research question?).</p></li>
-</ul>
-</section>
-<section id="model-fitting" class="level2">
-<h2 class="anchored" data-anchor-id="model-fitting">4. Model Fitting</h2>
-<p><strong>Use <code>lm()</code> to fit the linear regression model you have planned</strong> in R. Don’t forget to assign a name to the fitted model object!</p>
-<p>Then, show the model’s <code>summary()</code>.</p>
-<p>Consider showing the model equation – you might hand-write it; or, you may use the examples in <a href="https://applied-regression.netlify.app/quarto/math-notation">our online reference guide</a> to learn how to typeset it properly (Greek letters, subscripts and all) right in your Quarto file.</p>
-</section>
-</section>
-<section id="going-further-tips-organization" class="level1">
-<h1>Going Further: Tips &amp; Organization</h1>
-<ul>
-<li><p>Ensure that your file has an appropriate title and has your name on it. You can edit these in the first few lines of the Quarto file. Be careful up there: a misplaced space or deleted quotation mark will cause big trouble.</p></li>
-<li><p>Use section and subsection headers as needed to guide the reader through your work. The fewer hashtags there are, the larger the header.</p></li>
-<li><p>Consider deleting instructions and keeping just your own interpretation and explanations.</p></li>
-<li><p>Make sure no R code goes off the edge of the page in the rendered file (if needed, you can put line breaks after any comma or plus sign).</p></li>
-<li><p>Make sure your setup chunk (with the <code>library()</code> calls) includes the initial line: <code>#| include: false</code>. This prevents undesirable garbage messages resulting from the <code>library()</code> calls from being shown in your rendered file.</p></li>
-</ul>
-</section>
-<section id="notes" class="level1">
-<h1>Notes</h1>
-<p><em>You may feel this analysis is incomplete, or be wondering, “What does this all mean, what conclusion can we draw?” You are right! We will keep working and learning and you’ll update your results next time.</em></p>
 </section>
 
 </main>

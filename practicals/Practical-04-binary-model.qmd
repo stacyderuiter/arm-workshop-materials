@@ -1,12 +1,16 @@
 ---
-title: "Binary Regression Modeling Practice"
+title: "Practical 4: Binary Regression Modeling Practice"
+author: 
+  - First author name goes here
+  - You can have more than one author
+date: "June 13, 2025"
 format: 
   html:
     toc: true
-    toc_float: true
     code-copy: true
     embed-resources: true
-    code-tools: true
+  typst: default
+  pdf: default
 editor: source
 ---
 
@@ -19,15 +23,15 @@ library(glmmTMB)
 library(ggeffects)
 ```
 
-## Data: Housing Loans
+# Data: Housing Loans
 
-#### Research Question
+## Research Question
 
-Your goal is to plan and fit a regression model with `action_taken` as the response variable (using all data or Kent County only - you choose). You may choose predictors to match the analysis in [an analysis of similar nationwide data by *The Markup* ](https://themarkup.org/denied/2021/08/25/the-secret-bias-hidden-in-mortgage-approval-algorithms), or if you prefer, make your own plan.
+Your goal is to plan and fit a regression model with `action_taken` as the response variable (using all data or Kent County only - you choose). You may choose predictors to match the analysis in [an analysis of similar nationwide data by *The Markup* ](https://themarkup.org/denied/2021/08/25/the-secret-bias-hidden-in-mortgage-approval-algorithms) (see BIG HINT below), or if you prefer, make your own plan.
 
-#### Data Details
+## Data Details
 
-This data is from HDMA, on mortgage approvals in Michigan in 2020 (similar to, but not the same as, the data analyzed by The Markup).
+This data is from HDMA, on mortgage approvals in Michigan in 2020. It is similar to, but not the same as, the data analyzed by The Markup.
 
 The data were obtained from <https://ffiec.cfpb.gov/data-browser/> and pre-processed to make the file size smaller, and to filtering the data like [The Markup](https://themarkup.org/denied/2021/08/25/the-secret-bias-hidden-in-mortgage-approval-algorithms) did to include potential borrowers meeting conditions:
 
@@ -83,11 +87,11 @@ hdma_kent_20 <- hdma_mi_20 |>
 ```
 
 
-### Minimal Data Prep
+## Minimal Data Prep
 
 Note that in this housing dataset, many categorical variables are stored as numeric codes. 
 
-**Even if you don't want to do *any* additional data prep, make sure you `factor()` your response variable,** plus any **categorical predictors** you want to use in your model**, so they are not treated as numeric data.**
+**Even if you don't want to do *any* additional data prep, make sure you `factor()` your response variable,** plus any **`factor()` any other** *categorical* **predictors** you want to use in your model**, so they are not treated as numeric data.**
 
 Something like:
 
@@ -101,7 +105,9 @@ hdma_mi_20 <- hdma_mi_20 |>
   )
 ```
 
-### (Optional) More Advanced Data Prep
+## (Optional) More Advanced Data Prep
+
+If you want to do more...ask a helper!
 
 You can find a list of variable definitions and codes used in the variables in the dataset at:
 
@@ -109,16 +115,16 @@ You can find a list of variable definitions and codes used in the variables in t
 
 Ideally you will create and use variables where the category labels are intelligible words rather than numeric codes! You may also need to rename variables that have "-" in the names - refer to the "old/bad" names in back-ticks like: \`bad-variable-name\`. For detailed examples on how to rename and reorganize this dataset for use, see: <https://stacyderuiter.github.io/stat245-sp25/housing-wrangling.html>.
 
-## Tasks
+# Tasks
 
 1.  **Plan:** Articulate your model plan. You may do this one of two ways:
     A.  Make your own plan, considering dataset size and maybe a causal diagram; **or,**
     B.  To replicate (as closely as possible) the model fitted in the analysis by [The Markup](https://themarkup.org/denied/2021/08/25/the-secret-bias-hidden-in-mortgage-approval-algorithms), relying on their expertise in this field. *To do this: See* the "BIG HINT" *below.*
-2.  **Explore** Read your data into R and make a one well-designed exploratory plot of the data that is relevant to your research question. In 1-2 sentences, explain A) Any design choices (type of graph, use of color, etc.) and B) Any patterns you see in the graph.
+2.  **(Optional) Explore** Read your data into R and make a one well-designed exploratory plot of the data that is relevant to your research question. Make note of any patterns you see in the graph.
 3.  **Fit** a regression model that is consistent with your model plan. Show its `summary()`.
-  - Note: depending on the dataset and predictors you use, you may well run into model-fitting warnings. Don't ignore these; work with your team or instructors to solve them!
+  - Note: depending on the dataset and predictors you use, you may well run into model-fitting warnings. *Don't ignore these warnings*; work with your team or instructors to solve them!
 4.  **Assess** your model, showing all your work: clearly state which condition you're checking, whether it's met, and what evidence supports your decision.
-5.  State your **conclusions** about the relationship between your key predictor of interest and the response. To support your answer, you might refer to **model selection** results, **model assessment** (to confirm results are trustworthy) and maybe a **prediction plot** or data graph to describe effect size/direction.
+5.  State your **conclusions** about the relationship between your key predictor of interest and the response. To support your answer, you might refer to **model comparison/selection** results, **model assessment** (to confirm results are trustworthy) and maybe a **prediction plot** or data graph to describe effect size/direction.
 
 ## BIG HINT: The Markup's analysis {#hint}
 
