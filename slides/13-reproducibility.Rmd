@@ -1,0 +1,102 @@
+---
+title: "Reproducible Research"
+author: ""
+date: "June 2025"
+output:
+  xaringan::moon_reader:
+    self_contained: true
+    css: ['default', 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css', 'slides.css']
+    lib_dir: libs
+    nature:
+      titleSlideClass: ['inverse','middle','left',my-title-slide]
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '4:3'
+---
+
+```{r, setup, include=FALSE}
+
+```
+
+## What's (computationally) "Reproducible"?
+
+- Someone *else* (or *you*?)...
+- can replicate your results given the
+  - original data
+  - documentation
+  - any necessary code
+- (but make it *easy*)
+- Conflicting value: data privacy
+
+---
+class: big center inverse section
+
+<br>
+<br>
+# Our Stories
+
+---
+## Why Quarto (or Rmarkdown)?
+
+- Combine code *and* text
+- Generate reports, slides, websites, ebooks...
+- Embed/store code without necessarily showing it
+- Remember what you did
+- Quickly make corrections or add new data
+- ...
+
+---
+## What about Git/GitHub?
+### What is it *for* and why might you use it?
+
+.small[
+- Store, share, and collaborate on code
+- Track changes over time (who, what, when)
+  - *and without my-report-final.pdf, my-report-final2.pdf...*
+- Ability to revert
+- Control over what to add to shared repository, when
+- Know who uses and builds on your code
+- Easy websites / documents hosted online
+- It's *not* for: large files
+]
+
+---
+class: smaller
+## Learn More: Reproducible Research
+
+- [A Beginner's Guide to Conducting Reproducible Research](https://doi.org/10.1002/bes2.1801) (Jesse Alston & Jessica Rick)
+- [Open science, reproducibility, and transparency in ecology](https://doi.org/10.1002/eap.1822) (Stephen Powers & Stephanie Hampton)
+- [Best Practices for Scientific Computing](https://doi.org/10.1371/journal.pbio.1001745) and [Good Enough Practices for Scientific Computing](https://swcarpentry.github.io/good-enough-practices-in-scientific-computing/) (Greg Wilson & colleagues) (But seriously...`src` and `bin`?)
+- [Pragmatic Reproducible Research](https://doi.org/10.1172/JCI173741) (Luke Rasmussen & colleagues)
+- [Reproducibility and Replicability in Science](https://www.ncbi.nlm.nih.gov/books/NBK547532/) (book @ nih.gov)
+- [Eleven strategies for making reproducible research...the norm](https://doi.org/10.7554/eLife.89736) (Friederike Kohrs & colleagues)
+- [...Data and Methods Transparency in Nonprofit Research](https://doi.org/10.1007/s11266-025-00736-0) (René Bekkers & colleagues)
+
+---
+class: small
+## Learn More: Quarto
+
+- [Get started with Quarto](https://quarto.org/docs/get-started/hello/rstudio.html) from quarto.org
+- [Get started with Quarto](https://applied-regression.netlify.app/quarto/how-to-quarto) from us
+- [Get started with Quarto](https://r4ds.hadley.nz/quarto.html) from *R for Data Science (2nd ed.)* by Hadley Wickham
+- [Get started with Quarto in RStudio](https://docs.posit.co/ide/user/ide/guide/documents/quarto-project.html) from posit
+- [Full Quarto documentation](https://quarto.org/docs/guide/)
+
+---
+class: small
+## Learn More: Git/GitHub
+
+- video introducing [Git for Humans](https://youtu.be/eWxxfttcMts?si=SzUfQEuP6rbZFI9K) (Alice Bartlett)
+- [Happy git with R](https://happygitwithr.com/) (Jenny Bryan & colleagues)
+- [GitHub Pages](https://pages.github.com/) or ["Creating a GitHub Pages Site"](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site) for making a website from a repo
+- [Learn Git Branching tutorials](https://learngitbranching.js.org/?locale=en_US)
+
+---
+# Feedback
+## <https://cutt.ly/arm-feedback>
+
+```{r, echo = FALSE, out.width = "40%", fig.align='center'}
+knitr::include_graphics("images/quick-feedback-qr-code.png")
+```
+
