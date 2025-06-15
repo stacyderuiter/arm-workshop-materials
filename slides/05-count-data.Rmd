@@ -1,0 +1,322 @@
+---
+title: "Count Data and Models"
+subtitle: "June 2025"
+output:
+  xaringan::moon_reader:
+    css: ["../xaringan-themer.css", "../slides.css"]
+    lib_dir: libs
+    nature:
+      ratio: "16:9"
+      highlightLines: true
+      highlightStyle: solarized-light
+      countIncrementalSlides: false
+---
+
+```{r packages, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(viridis)
+library(sugrrants)
+library(lubridate)
+library(ggformula)
+```
+
+### What does it mean to be count data?
+- Constrained to be positive
+  - Zero or greater
+
+--
+- Discrete
+  - Whole number counts
+
+--
+- Rate
+  - Counts per unit
+
+
+---
+### Lizard Data Set
+
+```{r loaddata,echo=FALSE, message=FALSE, warning=FALSE}
+lizard <- read_csv("lizard.csv")
+```
+
+.question[
+Does vegetation or temperature explain the number of sand lizards found at a site?
+]
+
+--
+
+Variables:
+
+lizard ~ veg + temp + visit
+
+- `lizard`: the number of sand lizards found at one of 200 sites
+- `veg`: A measure of vegetation between -1 and 1, where 0 is the average vegetation density  
+- `temp`: A measure of temperature between -1 and 1, where 0 is the average temperature
+- `visit`: Takes the value 1, 2 or 3 depending on which visit to the site is being recorded
+
+Data courtesy of Marc Kery
+
+---
+### Visualize
+```{r hist, fig.align='center',fig.width=6,fig.height=6}
+ggplot(lizard,aes(x=lizard))+
+  geom_histogram(bins=10) +
+  labs(x="Number of Lizards",
+       y="Count")
+```
+
+---
+### Lizards and Vegetation
+.small[
+```{r plot,fig.align='center',fig.width=6,fig.height=6}
+ggplot(lizard,aes(y=lizard,x=veg))+
+  geom_point(size=3)+
+  labs(title="Lizards by Vegetation",
+       x = "Vegeitation",
+       y = "Number of Lizards")
+```
+]
+
+---
+### Bad Idea
+```{r badplot,fig.align='center',fig.width=6.5,fig.height=6.5,echo=FALSE, message=FALSE}
+ggplot(lizard,aes(y=lizard,x=veg))+
+  geom_point(size=3) + 
+  labs(title="Lizards by Vegitation",
+       x = "Vegitation",
+       y = "Number of Lizards")+
+  geom_smooth(method="lm",se=F)
+```
+
+---
+### Why bad?
+
+---
+### Check Formally
+
+.pull-left[
+- Independence
+```{r badacf, fig.align='center',fig.width=6,fig.height=4,echo=FALSE}
+liz.lm    <- lm(lizard~veg,data=lizard)
+resid.lm  <- residuals(liz.lm)
+fitted.lm <- fitted(liz.lm)
+acf(resid.lm)
+```
+]
+.pull-right[
+- Error is constant
+```{r badvar, fig.align='center',fig.width=6,fig.height=4,echo=FALSE}
+gf_point(resid.lm ~ fitted.lm)
+```
+]
+
+---
+### Normality
+
+.pull-left[
+- Histogram
+```{r badhis, echo=FALSE}
+gf_histogram(~resid.lm, bins=15) 
+```
+]
+.pull-right[
+- QQ plot
+```{r badqq,echo=FALSE}
+gf_qq(~resid.lm) |>
+  gf_qqline()
+```
+]
+
+
+---
+### Good Idea
+.small[
+```{r goodplot,fig.align='center',fig.width=6,fig.height=6,message=FALSE}
+ggplot(lizard,aes(y=lizard,x=veg))+
+  geom_point(size=3) + 
+  labs(title="Lizards by Vegitation",
+       x = "Vegitation",
+       y = "Number of Lizards")+
+  geom_smooth(method="glm",method.args = list(family = "poisson"),se=F)
+```
+]
+
+
+---
+### How do we get there?
+
+--
+- Generalized linear model (GLM)
+
+--
+- Relax some assumptions
+  - Linear on the scale of the linear predictor
+  - Residuals are appropriate for the chosen distribution
+
+--
+- Still need independence
+
+---
+### Poisson GLM
+- Response variable
+$$lizard_{i} \sim Pois(\lambda_{i})$$
+
+--
+- Explanatory variable
+$$g(\lambda_{i}) = \eta_{i} = \beta_{0} + \beta_{1}veg_{i}$$
+
+--
+- Link function
+$$g(\lambda_{i}) = \log(\lambda_{i})=\eta_{i} = \beta_{0} + \beta_{1}veg_{i}$$
+
+--
+- Invertible
+$$\lambda_{i} = g^{-1}(\eta_{i}) = \exp(\beta_{0} + \beta_{1}veg_{i})$$
+
+---
+### Model Fitting
+```{r loglin}
+pois.mod <- glm(lizard~veg+temp+as.factor(visit),family=poisson(link="log"),data=lizard)
+summary(pois.mod)
+```
+
+---
+### Assumptions
+
+.pull-left[
+.small[
+```{r assumptions}
+resid <- residuals(pois.mod,type="response")
+fit   <- fitted(pois.mod)
+plot(fit,resid,main="Residual vs Fitted",xlab="Fitted",ylab="Residuals")
+abline(h=0)
+```
+ ]
+]
+.pull-right[
+.small[
+```{r poisacf, fig.align='center'}
+acf(resid)
+```
+ ]
+]
+
+---
+### Right amount of variance?
+
+- Use Pearson's residuals
+  - Scaled by expected variance
+  - Approximately constant variance
+  - Standard deviation of 1
+
+.small[
+```{r pearsonresid, fig.align='center',fig.width=5,fig.height=5}
+p.resid <- resid(pois.mod, type='pearson')
+gf_point(p.resid ~ fit) |>
+  gf_labs(x='Fitted Values', y='Pearson Residuals')
+```
+]
+
+---
+### Overdispersion
+
+- More variance than expected
+  - Poisson distribution: $\mu$ = $\sigma^2$
+  
+--
+- Can check with the quasi-Poisson
+.small[
+```{r quasi}
+quasi.mod <- glm(lizard~veg+temp+as.factor(visit),family=quasipoisson(),data=lizard)
+summary(quasi.mod)
+```
+]
+
+---
+## How big is too big?
+  - overdispersion < 1.5, generally okay
+  - overdispersion > 15, big problems
+
+--
+- Alternative is the negative-binomial
+  - Variance can be greater than the mean
+  - Still using the log link
+
+.small[  
+```{r negbin,message=FALSE}
+library(MASS)
+nb.mod <- glm.nb(lizard~veg+temp+as.factor(visit), data=lizard)
+summary(nb.mod)
+```
+]
+
+---
+### Which to use?
+
+- Judgement call
+
+--
+- Can compare
+
+```{r compare, message=FALSE}
+library(lmtest)
+lrtest(pois.mod,nb.mod)
+```
+
+---
+### Assessment
+
+.question[What might be a good why to assess model fit?]
+
+--
+- $R^{2}$ works best for simple linear regression
+  - Are some other related options, won't cover here
+
+--
+- Observed versus predicted
+```{r obsvpred,fig.align='center',fig.width=5,fig.height=5,echo=FALSE}
+plot(fitted(nb.mod),lizard$lizard,main="Observed vs Predicted",ylab="Observed Lizards",xlab="Predicted Lizards")
+abline(0,1)
+```
+
+---
+### Intepretation
+
+.question[How do we interpret the intercept in this case?]
+
+--
+- Zero is the average in our data
+  - Number of lizards for average vegetation and temperature
+  - $\exp(0.434)=1.54$
+
+--
+- Start with the sign of the slopes
+  - Decrease with increasing vegetation
+  - Increase with increasing temperature
+  - No effect of visit (slopes not statistically different from zero)
+
+---
+### More Interpretation
+
+.question[What is the difference between the scale of the linear predictor and scale of the response?]
+
+--
+- Exponentiate the slopes
+  - Percentage change in response variables for a unit increase in the explanatory variable
+  - $\exp(-0.569)=0.566$
+  - $\exp(1.101)=3.01$
+
+--
+- What is a unit?
+
+--
+- -1 to 0
+- 0 to 1
+
+--
+- Scale by raising to the power
+  - $\exp(-0.569)^{0.1}=0.95$
+  - $\exp(1.101)^{0.1}=1.12$
+
+
