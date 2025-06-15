@@ -1,0 +1,70 @@
+---
+title: "Welcome!"
+subtitle: Applied Regression Workshop, June 2025
+author: ""
+format: 
+  revealjs:
+    auto-slide: 15000
+    loop: true
+    css: ['default', 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css', 'slides.css']
+    lib_dir: libs
+    highlightStyle: github
+    highlightLines: true
+    countIncrementalSlides: false
+    width: 800
+    height: 600
+    footer: These slides will loop.
+self-contained: true
+---
+
+```{r, setup, include=FALSE}
+
+```
+
+## Internet
+
+- **eduroam** (if you have it) should work!
+- **CalvinGuest** (if you don't have eduroam)
+    - connect to [**CalvinGuest**](https://calvin.edu/offices-services/information-technology/guests/wireless-access) and follow instructions to register
+
+## Workshop Materials {.smaller}
+
+### posit.cloud
+
+- Log in to your [posit.cloud](https://posit.cloud/) account
+- *Share posit.cloud email with Stacy* (`stacy.deruiter@calvin.edu`)
+- You'll be added to the space "Applied Regression Workshop"
+- In the space...
+  - Click blue "New Project" bubble
+  - Choose "+ New Project From Template"
+  - Choose the template **arm-workshop-materials**
+  
+## Workshop Materials {.smaller}
+
+### Local R/RStudio w/out GitHub
+
+<!-- ### If you downloaded R/RStudio (*~~GitHub~~*) -->
+
+- Download materials (zip file): <https://cutt.ly/arm-materials> 
+
+```{r, echo = FALSE, out.width = "35%", fig.align='center'}
+knitr::include_graphics("images/arm-materials.png")
+```
+
+## Workshop Materials {.smaller}
+
+### GitHub clone
+
+- Clone repo:
+    - <https://github.com/stacyderuiter/arm-workshop-materials>
+    
+- You may want to do so [as an RStudio project](https://happygitwithr.com/new-github-first#new-rstudio-project-via-git) (if you use RStudio projects)
+    
+## Workshop Materials {.smaller}
+
+### Key Directories
+
+- **slides** for slides
+- **practicals** for hands-on activity instructions
+
+*posit.cloud users: stay tuned for real-time collaboration option for practicals.*
