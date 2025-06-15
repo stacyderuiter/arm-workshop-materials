@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Linear Regression Assessment, Diagnostics &amp; Interpretation</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: inverse, middle, left, my-title-slide, title-slide
+
+.title[
+# Linear Regression Assessment, Diagnostics &amp; Interpretation
+]
+.author[
+### 
+]
+.date[
+### June 2025
+]
+
+---
+
+
+
+
+# Model Diagnostics and Assessment
+
+- Does the model fit data well?
+- *Should* we have fit a line -- Is model appropriate for data?
+- Are predictors *really* associated with response?
+
+---
+
+## Regression Conditions
+
+#L
+--
+inearity
+
+#I
+--
+ndependence
+
+#N
+--
+ormality of residuals
+
+#E
+--
+qual variance
+
+---
+
+# Flowers
+
+Iris data set in `R`
+
+--
+- Is there a relationship between the length of an iris petal, its width and its species?
+
+
+``` r
+# Load the data
+library(datasets)
+
+# Look at the data
+glimpse(iris)
+```
+
+```
+## Rows: 150
+## Columns: 5
+## $ Sepal.Length &lt;dbl&gt; 5.1, 4.9, 4.7, 4.6, 5.0, 5.4, 4.6, 5.0, 4.4, 4.9, 5.4, 4.…
+## $ Sepal.Width  &lt;dbl&gt; 3.5, 3.0, 3.2, 3.1, 3.6, 3.9, 3.4, 3.4, 2.9, 3.1, 3.7, 3.…
+## $ Petal.Length &lt;dbl&gt; 1.4, 1.4, 1.3, 1.5, 1.4, 1.7, 1.4, 1.5, 1.4, 1.5, 1.5, 1.…
+## $ Petal.Width  &lt;dbl&gt; 0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.3, 0.2, 0.2, 0.1, 0.2, 0.…
+## $ Species      &lt;fct&gt; setosa, setosa, setosa, setosa, setosa, setosa, setosa, s…
+```
+---
+
+# Our Model
+
+
+``` r
+# Use informative model names!
+flower &lt;- lm(Petal.Length ~ Petal.Width + Species, 
+          data = iris)
+
+# and data should be named informatively, too!
+my_iris &lt;- iris |&gt;
+  mutate(preds = predict(flower),
+         resids = resid(flower))
+```
+
+---
+
+# Linearity: Data Exploration
+
+### No trend, Linear trend: **OK**
+
+
+``` r
+# Visualize the data
+ggplot(iris,aes(Petal.Width,Petal.Length,color=Species)) +
+  geom_point()+
+  labs(title = "Length and Width of Iris Petals",
+       x = "Petal Width (cm)",
+       y = "Petal Length (cm)",
+       color = "Species")
+```
+
+&lt;img src="03-assess-diagnose_files/figure-html/unnamed-chunk-3-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Linearity: Residual Plots
+### No trends: **OK**
+
+
+``` r
+gf_point(resids ~ preds,
+         data = my_iris)
+```
+
+&lt;img src="03-assess-diagnose_files/figure-html/unnamed-chunk-4-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Your turn!
+
+Using the multiple regression model from the ultra-processed foods data set:
+   - Extract the residuals and fitted values
+   - Plot the response variable against one of the explanatory variables
+   - Plot the residuals against the fitted values
+   
+
+
+---
+## Independence of Residuals
+### Ponder sort order; then ACF plot
+### Logic and knowledge of data set
+
+
+``` r
+acf(my_iris$resids, main="Residual ACF plot")
+```
+
+&lt;img src="03-assess-diagnose_files/figure-html/unnamed-chunk-5-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Your turn!
+
+Using the same multiple regression model:
+   - Create an acf plot
+
+
+---
+
+## Normality of the Residuals: Histogram
+### (Be quite generous)
+
+
+``` r
+gf_histogram(~resids, data = my_iris)
+```
+
+&lt;img src="03-assess-diagnose_files/figure-html/unnamed-chunk-6-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+## Normality of the Residuals: Q-Q plot
+### (Be quite generous)
+
+
+``` r
+gf_qq(~resids, data = my_iris) |&gt;
+  gf_qqline()
+```
+
+&lt;img src="03-assess-diagnose_files/figure-html/unnamed-chunk-7-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Your turn!
+
+Using the multiple regression model from the ultra-processed foods data set:
+   - Plot a histogram of the residuals
+   - Generate a QQ plot
+   
+
+---
+
+## Constant Residual Variance
+### Point cloud should fit well in a rectangle (no trumpet or curve)
+### True for residual vs. fitted *and* residual vs. any predictor
+
+
+``` r
+gf_point(resids ~ preds, data = my_iris, title = 'OK', size = 4) |&gt;
+  gf_hline(yintercept = 3, color = 'darkred', linetype = 'dashed', size = 3) |&gt;
+  gf_hline(yintercept = -3, color = 'darkred', linetype = 'dashed', size = 3) |&gt;
+  gf_hline(yintercept = 0, color = 'black', linetype = 'dashed', size = 2) |&gt;
+  gf_labs(x="Fitted", y="Residuals")
+```
+
+&lt;img src="03-assess-diagnose_files/figure-html/unnamed-chunk-8-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Your turn!
+
+Using the multiple regression model from the ultra-processed foods data set:
+   - Plot the residuals against the fitted values
+   - Add dashed lines 3 standard deviations from the mean
+   
+
+---
+
+# *Any* LINE Violation -&gt; Danger!
+## Conclusions can not be trusted
+
+- slope estimates **incorrect**
+- CIs and p-values **too small**
+- poor prediction accuracy
+
+--
+- Most robust to linearity and normality
+- Independence and equal variance the kickers
+
+---
+
+# `\(R^{2}\)`
+### Simple measure of fit of model to data
+### NOT *goodness* of model or *appropriateness*
+
+--
+- Ranges from 0 - 1
+  - 0: no trend
+  - 1: perfect fit
+- Percentage of variance explained 
+
+
+`$$R^2 =1 - \frac{\sum_{i=1}^{n} (y_i - \hat{y}_i)^2} {\sum_{i=1}^{n} (y_i - \bar{y})^2}$$`
+---
+
+# Model Output
+
+
+``` r
+summary(flower)
+```
+
+```
+## 
+## Call:
+## lm(formula = Petal.Length ~ Petal.Width + Species, data = iris)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -1.02977 -0.22241 -0.01514  0.18180  1.17449 
+## 
+## Coefficients:
+##                   Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)        1.21140    0.06524  18.568  &lt; 2e-16 ***
+## Petal.Width        1.01871    0.15224   6.691 4.41e-10 ***
+## Speciesversicolor  1.69779    0.18095   9.383  &lt; 2e-16 ***
+## Speciesvirginica   2.27669    0.28132   8.093 2.08e-13 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.3777 on 146 degrees of freedom
+## Multiple R-squared:  0.9551,	Adjusted R-squared:  0.9542 
+## F-statistic:  1036 on 3 and 146 DF,  p-value: &lt; 2.2e-16
+```
+---
+
+# Interpretation
+
+-  `(Intercept)`: An *Iris setosa* with a petal width of zero has a petal length of 1.21 cm
+
+--
+-  `Petal.Width` slope: For each cm increase in petal width, petal length also increases by a cm
+
+--
+-  `Speciesverisicolor` slope: The length of *Iris versicolor* petals are, on average 1.7 cm longer than *I. setosa*
+
+--
+-  `Speciesvirginica` slope: The length of *Iris virginica* petals are, on average 2.3 cm longer than *I. setosa*
+
+--
+-  The length of an iris flower petal is positively associated with its width (`\(\beta_{1}\)` = 1.02, SE = 0.15), and is different between species. 
+
+`$$Length_{i} = 1.21 + 1.02Petal.Width_{i} + 1.7versicolor_{i} + 2.3virginica_{i} + \epsilon_{i}$$`
+
+---
+
+# Your turn!
+
+Using the multiple regression model from the ultra-processed foods data set:
+  -  Interpret your model results
+     - Is there an associated between the explanatory variables and the response?
+     - What is the nature of the association?
+     - How would you communicate your results to another scientist? To the general public?
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false,
+  "ratio": "4:3"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
