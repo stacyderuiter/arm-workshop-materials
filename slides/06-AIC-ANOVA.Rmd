@@ -1,0 +1,210 @@
+---
+title: "AIC and ANOVA"
+subtitle: "June 2025"
+output:
+  xaringan::moon_reader:
+    css: ["../xaringan-themer.css", "../slides.css"]
+    lib_dir: libs
+    nature:
+      ratio: "16:9"
+      highlightLines: true
+      highlightStyle: solarized-light
+      countIncrementalSlides: false
+---
+
+```{r packages, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(viridis)
+library(sugrrants)
+library(lubridate)
+library(ggformula)
+library(MASS)
+```
+
+### What to do with our model set?
+- We were excellent planners
+  - Developed clear hypotheses
+  - Model set checked and ready to go
+
+--
+- Now what?
+
+--
+- Choose the "best" model
+  - AIC
+  - ANOVA
+
+
+---
+### Crime
+
+```{r, message=FALSE, echo=FALSE}
+crime <- read_csv("crimedata.csv")
+```
+
+.question[
+Does education help explain the rate of violent crime?
+]
+
+--
+
+Variables:
+- `Total`: the total number of crimes per million
+- `Violent`: the number of violent crimes per 100000  
+- `Police`: Police funding in dollars per resident per year
+- `Highschool`: Percent of adults with 4 years of high school
+- `Deliquent`: Percent of 16-19 years olds not in high school
+- `College`: Percent of 18-24 year olds in college
+- `CollegeAdults`: Percent of adults with at least 4 years of college
+
+---
+### What's our plan?
+
+--
+$n/15 = 50/15 = 3.33$
+ - Not going to use all the predictors
+ - Construct hypotheses
+ 
+--
+- Control all hypotheses for the amount of money spent on policing
+
+--
+- Hypothesis #1:
+  - Low education levels are a the driver of violent crime
+.small[
+```{r hyp1}
+crime1 <- glm(Violent~Police+HighSchool+Deliquent,family = poisson(), data=crime)
+```
+]
+
+- Hypothesis #2:
+  - More college educated adults means less violent crime
+.small[
+```{r hyp2}
+crime2 <- glm(Violent~Police+CollegeAdults,family=poisson(),data=crime)
+```
+]
+
+---
+### Coding Time
+
+This is a continuation of our planning activity
+ - Make additions and modifications to the previous Quarto file
+ - Keep the same initial model
+ - Develop, fit and assess a second model hypothesis
+ 
+---
+### Choices, choices
+
+- Akaike’s Information Criterion (AIC)
+  - Penalizes for the number of estimated parameters
+  $$-2log-likelihood + 2p$$
+  - Roughly the same sample size between models being compared
+
+--
+- Measures the information lost
+  - Goal is the least amount of lost information
+
+--
+- Lowest AIC = "best" model
+  - Marked preference when the difference between AIC values is greater than 2
+  - Subjective
+
+--
+- Picks the "best" model in the set
+  - Doesn't mean its any good
+  - A better one could always exist
+  
+---
+### Different Flavours of AIC
+
+- Correct for small sample size, AICc
+$$-2log-likelihood + 2p + 2\frac{p(p+1)}{(n-p-1)}$$
+
+--
+- Handle over-dispersed data, QAIC
+$$QAIC = -2\frac{2}{VIF}log-likelihood + 2p$$
+  - Can do QAICc too!
+
+--
+- Measures relative, not absolute, fit
+
+---
+### Finding AIC
+`AIC` in `R`
+
+```{r aic}
+AIC(crime1,crime2)
+```
+
+--
+The model with the covariates related to high school education performs better
+
+--
+## WARNING!
+AIC is only defined up to an arbitrary constant
+ - Different constants for different purposes
+ - Take care when comparing fits of different classes
+
+---
+### Coding Time
+Use AIC to select between the two models you defined earlier
+
+---
+### Analysis of Variance (ANOVA)
+
+.question[Is one of our models doing a better job explaining the variability in the data?]
+
+
+--
+Variability is divided into two parts:
+ - Explained by the model - Regression sums of squares
+ - Unexplained by the model - Residual sums of squares
+
+---
+### How's it work?
+
+Models with more explanatory variables should explain more variability
+
+--
+- If true, keep the model with more covariates
+
+--
+- If the models explain a similar amount of variability, keep the model with fewer covariates  
+
+--
+$H_{0}:$ The two models are equivalent   
+$H_{1}:$ The model with more covariates explains more variability  
+
+---
+### ANOVA
+
+```{r aov}
+anova(crime1, crime2)
+```
+--
+Strong evidence against the null hypothesis
+
+---
+### Null Model
+
+.question[Do we learn anything at al from doing regression?]
+
+
+--
+- ANOVA to compare full and null model
+  - Full model: the one with explanatory variables
+  - Null model: intercept only
+  - The hypothesis test at the end of the `lm` output
+
+--
+```{r full}
+crime.null <- glm(Violent~1, family=poisson(), data=crime)
+anova(crime1,crime.null)
+```
+
+---
+### Now you try
+
+- Compare your two models using ANOVA
+- Build a null model and compare to the chosen model using ANOVA
