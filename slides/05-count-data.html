@@ -62,10 +62,18 @@ Data courtesy of Marc Kery
 ### Visualize
 
 ``` r
-ggplot(lizard,aes(x=lizard))+
-  geom_histogram(bins=10) +
-  labs(x="Number of Lizards",
-       y="Count")
+ggplot(lizard, aes(x = lizard)) +
+  geom_histogram(binwidth = 1, origin = 0) +
+  labs(x = "Number of Lizards",
+       y = "Count")
+```
+
+```
+## Warning: The `origin` argument of `stat_bin()` is deprecated as of ggplot2 2.1.0.
+## ℹ Please use the `boundary` argument instead.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.
 ```
 
 &lt;img src="05-count-data_files/figure-html/hist-1.png" style="display: block; margin: auto;" /&gt;

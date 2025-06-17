@@ -37,7 +37,7 @@ library(ggformula)
 ### Lizard Data Set
 
 ```{r loaddata,echo=FALSE, message=FALSE, warning=FALSE}
-lizard <- read_csv("lizard.csv")
+lizard <- read_csv("../data/Lizard.csv")
 ```
 
 .question[
@@ -60,10 +60,10 @@ Data courtesy of Marc Kery
 ---
 ### Visualize
 ```{r hist, fig.align='center',fig.width=6,fig.height=6}
-ggplot(lizard,aes(x=lizard))+
-  geom_histogram(bins=10) +
-  labs(x="Number of Lizards",
-       y="Count")
+ggplot(lizard, aes(x = lizard)) +
+  geom_histogram(binwidth = 1, origin = 0) +
+  labs(x = "Number of Lizards",
+       y = "Count")
 ```
 
 ---
