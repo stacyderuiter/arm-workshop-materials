@@ -1,0 +1,248 @@
+---
+title: "Interaction Terms"
+subtitle: "June 2025"
+format: 
+  revealjs:
+    theme: solarized
+editor: visual
+---
+
+## Interaction Terms
+
+-   Relationship between the response and predictor varies with the value of another predictor
+
+. . .
+
+-   Hierarchy principle: main effects needed when interaction effect is present
+    -   Main effect: the explanatory variable on its own
+    -   Interaction effect: the product of two explanatory variables
+
+## Case Study
+
+Is there a relationship between economic growth and energy consumption?
+
+ - Data from Goshrey et al. (2018)
+ 
+. . . 
+
+-   Variables
+    -   `year` Calendar year
+    -   `GDP` US gross domestic product
+    -   `EC` Energy consumption in billion BTU
+    -   `O_P` Oil price in dollars
+    -   `SPE` Public spending in dollars 
+
+## The Model
+
+ - Ideally, control for spending and oil price
+ - Energy consumption and oil price my interact to influence economic growth
+ - Greater volatility in oil prices after 1972, may interact with energy consumption
+
+## Creating a variable
+
+```{r,echo=FALSE, warning=FALSE,message=FALSE}
+library(tidyverse)
+library(scales)
+require(ggformula)
+enrg <- read_csv("Data_Reassesing.csv")
+```
+
+```{r, echo=TRUE}
+enrg <- enrg |>
+        mutate(V = ifelse(year < 1973,0,1))
+```
+
+```{r}
+knitr::kable(enrg)
+```
+
+## Regression Model: Categorical Interaction Term
+
+$$GDP_{i} = \beta_{0} + \beta_{1}EC_{i} + \beta_{2}V_{i} + \beta_{3}EC_{i}*V_{i} + \epsilon_{i}$$ - $V_{i}$ is an indicator variable\
+- Before 1972 has a different slope then after 1972
+
+## When $V_{i} = 1$
+
+$$GDP_{i} = \beta_{0} + \beta_{1}EC_{i} + \beta_{2}V_{i} + \beta_{3}EC_{i}*1 + \epsilon_{i}$$
+
+
+$$GDP_{i} = \beta_{0} + (\beta_{1}EC_{i}+\beta_{3}EC_{i}) + \beta_{2}V_{i} + \epsilon_{i}$$
+
+
+$$GDP_{i} = \beta_{0} + (\beta_{1}+\beta_{3})EC_{i} + \beta_{2}V_{i} + \epsilon_{i}$$
+
+## When $V_{i} = 0$
+
+$$GDP_{i} = \beta_{0} + \beta_{1}EC_{i} + \beta_{2}V_{i} + \beta_{3}EC_{i}*0 + \epsilon_{i}$$
+
+
+$$GDP_{i} = \beta_{0} + \beta_{1}EC_{i} + \beta_{2}V_{i} + \epsilon_{i}$$
+
+## Fitting the Model in `R`
+
+```{r, echo=TRUE}
+enrg.int <- lm(GDP~EC*V,data=enrg)
+summary(enrg.int)
+```
+
+## Visualizing the Interaction: Code
+
+```{r,warning=FALSE,message=FALSE,echo=TRUE, eval=FALSE}
+ggplot(enrg,aes(EC,GDP))+
+  geom_point() +
+  facet_wrap(vars(V)) +
+  geom_smooth(method="lm",se=FALSE) +
+  labs(title="GDP and Energy Consumption",
+       x = "Energy Consumption",
+       y = "GDP") +
+  scale_x_continuous(labels = label_comma()) +
+  scale_y_continuous(labels = label_comma())
+
+```
+
+## Visualizing the Code: Plots
+```{r,warning=FALSE,message=FALSE, echo=FALSE}
+ggplot(enrg,aes(EC,GDP))+
+  geom_point() +
+  facet_wrap(vars(V)) +
+  geom_smooth(method="lm",se=FALSE) +
+  labs(title="GDP and Energy Consumption",
+       x = "Energy Consumption",
+       y = "GDP") +
+  scale_x_continuous(labels = label_comma()) +
+  scale_y_continuous(labels = label_comma())
+
+```
+
+## Coding Time!
+
+Using the data from the most recent practical, fit a model with a categorical interaction term.  
+
+If you are feeling ambitious, plot it!
+
+## Regression Model: Quantitative Interaction Term
+
+$$GDP_{i} = \beta_{0} + \beta_{1}EC_{i} + \beta_{2}OP_{i} + \beta_{3}EC_{i}*OP_{i} + \epsilon_{i}$$ - No simplification\
+- How do we interpret?
+
+## Visualize: No Interaction
+
+```{r, echo=FALSE}
+library(plot3D)
+# set the x, y, and z variables
+x <- enrg$O_P
+y <- enrg$EC
+z <- enrg$GDP
+
+# Compute the linear regression 
+fit <- lm(z ~ x + y)
+
+# create a grid from the x and y values (min to max) and predict values for every point
+# this will become the regression plane
+grid.lines = 40
+x.pred <- seq(min(x), max(x), length.out = grid.lines)
+y.pred <- seq(min(y), max(y), length.out = grid.lines)
+xy <- expand.grid( x = x.pred, y = y.pred)
+z.pred <- matrix(predict(fit, newdata = xy), 
+                 nrow = grid.lines, ncol = grid.lines)
+
+# create the fitted points for droplines to the surface
+fitpoints <- predict(fit)
+
+# scatter plot with regression plane
+scatter3D(x, y, z, pch = 19, cex = 1,colvar = NULL, col="red", 
+          theta = 40, phi = 0, bty="b",
+          xlab = "Oil Price", ylab = "Energy", zlab = "GDP",  
+          surf = list(x = x.pred, y = y.pred, z = z.pred,  
+                      facets = TRUE, fit = fitpoints, col=ramp.col (col = c("dodgerblue3","seagreen2"), n = 300, alpha=0.7), border="black"), main = "")
+
+```
+
+## Fitting the Model in `R`
+
+```{r, echo=TRUE}
+enrg.int.cont <- lm(GDP~EC*O_P,data=enrg)
+summary(enrg.int.cont)
+```
+
+## Visualize: Interaction
+
+```{r, echo=FALSE}
+library(plot3D)
+# set the x, y, and z variables
+x <- enrg$O_P
+y <- enrg$EC
+z <- enrg$GDP
+
+# Compute the linear regression 
+fit <- lm(z ~ x*y)
+
+# create a grid from the x and y values (min to max) and predict values for every point
+# this will become the regression plane
+grid.lines = 40
+x.pred <- seq(min(x), max(x), length.out = grid.lines)
+y.pred <- seq(min(y), max(y), length.out = grid.lines)
+xy <- expand.grid( x = x.pred, y = y.pred)
+z.pred <- matrix(predict(fit, newdata = xy), 
+                 nrow = grid.lines, ncol = grid.lines)
+
+# create the fitted points for droplines to the surface
+fitpoints <- predict(fit)
+
+# scatter plot with regression plane
+scatter3D(x, y, z, pch = 19, cex = 1,colvar = NULL, col="red", 
+          theta = 150, phi = 20, bty="b",
+          xlab = "Oil Price", ylab = "Energy", zlab = "GDP",  
+          surf = list(x = x.pred, y = y.pred, z = z.pred,  
+                      facets = TRUE, fit = fitpoints, col=ramp.col (col = c("dodgerblue3","seagreen2"), n = 300, alpha=0.7), border="black"), main = "")
+
+```
+
+## Excluding Main Effects
+
+```{r, echo=TRUE}
+mod.only <- lm(GDP~EC:O_P,data=enrg)
+summary(mod.only)
+
+```
+
+## Coding Time
+
+Using the data from the most recent practical, fit a model with a quantitative interaction term.  
+
+Using the data from the most recent practical, fit a model with only an interaction term
+
+
+## Side Note
+
+Bad residual vs fitted plot
+
+```{r, echo=FALSE}
+enrg <- enrg |>
+  mutate(predsV = predict(enrg.int),
+         residsV = resid(enrg.int),
+         predsC = predict(enrg.int.cont),
+         residsC = resid(enrg.int.cont))
+```
+
+::::: columns
+::: column
+```{r, fig.width=7, fig.hieght=6, echo=FALSE}
+gf_point(residsV ~ predsV,
+         data = enrg,
+         xlab="Predicted Value",
+         ylab="Residual",
+         title="Interaction with Period")
+```
+:::
+
+::: column
+```{r, fig.width=7, fig.hieght=6,echo=FALSE}
+gf_point(residsC ~ predsC,
+         data = enrg,
+         xlab="Predicted Value",
+         ylab="Residual",
+         title="Interaction with Oil Price")
+```
+:::
+:::::

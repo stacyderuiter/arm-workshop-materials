@@ -1,0 +1,147 @@
+---
+title: "Other GLMs"
+subtitle: "June 2025"
+format: 
+  revealjs:
+    theme: moon
+editor: visual
+---
+
+## Three So Far
+
+-   Poisson
+-   Binomial
+-   What's the third?
+
+. . .
+
+-   Gaussian (aka linear regression)
+
+. . .
+
+-   Includes all members of the exponential family
+-   Same code can be used - just change the `family` argument
+
+## Gamma
+
+Waiting time distribution
+
+. . .
+
+Data are:
+
+-   Continuous
+
+-   Greater than zero
+
+. . .
+
+Some details $$y_{i} \sim \Gamma(\alpha,\beta)$$
+
+-   Inverse link function
+
+## Inverse Gaussian
+
+Time to event data, frequencies
+
+. . .
+
+Data are:
+
+-   Continuous
+-   Greater than zero
+
+. . .
+
+Some details: $$y_{i} \sim IGaus(\mu, \lambda)$$ where, $\lambda=\frac{\mu^{3}}{\sigma^{2}}$
+
+-   Inverse square link function
+
+## Beta
+
+Probabilities
+
+. . .
+
+Data are:
+
+-   Continuous
+-   Between 0 and 1
+
+. . .
+
+Some details: $$y_{i} \sim \beta(\alpha,\beta)$$
+
+-   Logit link
+-   Not a GLM mathematically, but a GLM practically
+
+## Multinomial
+
+Data fall in multiple categories
+
+. . .
+
+Data are:
+
+-   Discrete
+-   Fall in mutually exclusive groups
+-   Finite choice set
+-   Two types:
+    -   Ordinal
+    -   Categorical
+
+## Ordered Multinomial Data
+
+Different flavours:
+
+-   Proportional odds: same effect on all levels of response\
+-   Generalized ordered models: No relationships proportional\
+-   Partial proportional odds: some relationships are proportional\
+-   Continuation-ratio models: pass through lower values to get to higher
+
+
+
+## Categorical Multinomial Data
+
+Nominal logit model
+
+-   Assumes an equation for every outcome
+-   Probability of each outcome dependent on its own coefficients
+
+. . .
+
+Assumption: Independence of irrelevant alternatives
+
+-   Preference for A vs B not not affected by the presence or absence of C
+-   Strong assumption
+
+## Options in `R`
+
+Ordinal models:
+
+-   `polr` function in the `MASS` library
+-   `vglm` function in the `VGAM` library
+
+
+Categorical Models:
+
+-   `multinom` function in `nnet` package
+-   `vglm` function in `VGAM`\
+-   Other packages that have options include `mlogit`, `geepack`, `MCMCpack` and more
+
+## Some Things Never Change
+
+Check assumptions
+
+Assess the model
+
+Interpret the model
+
+Stop if things look wonky
+
+. . .
+
+A lot of information quickly 
+
+-   You now know options exist 
+-   Have the basics to explore

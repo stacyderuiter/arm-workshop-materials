@@ -1,0 +1,234 @@
+---
+title: "The Many Flavours of Regression"
+subtitle: "June 2025"
+format: 
+  revealjs:
+    theme: moon
+editor: visual
+---
+
+## Generalized Addative Models (GAMs)
+
+Non-linear relationships
+
+. . . 
+
+What is meant by non-linear?
+
+. . . 
+
+-   Non-linear in the parameters
+
+. . . 
+
+Use a smooth function to link response and predictor
+$$y_{i} = \beta_{0} + f(x_{i}) + \epsilon_{i}$$
+
+## Case Study
+
+What affects the body condition of fin whales in the North Atlantic?
+
+-   Data collected from 1967-2010
+-   Full analysis in Williams et al. 2013
+
+. . .
+
+Variables:
+
+-   `LE` - length in meters
+-   `m4` - a measure of body condition 
+-   `NewStatus` - Pregnant (1) or not (0)
+-   `SelP` - Zooplankton from Selvogsbanki
+
+
+## Splines
+
+Definitions:
+
+-   A thin wood or metal strip used in building construction
+-   A numeric function that is piecewise-defined by polynomial functions
+   
+
+## How to connect the splines? 
+
+Knots!
+
+-   Number of knots important
+-   Defines flexibility of the line
+-   Penalized smoothing spline
+    -   Cost to being non-linear
+    -   Avoid over-fitting
+
+## In `R`
+
+```{r whale, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+Fin <- read_csv("NewFinLN.csv")
+Fin <- Fin[,c('LE','m4','NewStatus','SelP')]
+Fin <- na.omit(Fin)       #omit NA's
+```
+
+```{r gam, message=FALSE,warning=FALSE, echo=TRUE}
+library(mgcv)
+fin <- gam(m4~s(LE,bs="ts")+s(SelP,bs="ts")+NewStatus,data=Fin)
+summary(fin)
+```
+
+## Visual
+
+```{r plotgam, echo=TRUE}
+par(mfrow=c(1,2))
+plot(fin)
+```
+
+## Diagnose
+
+```{r check, echo=TRUE}
+par(mfrow=c(2,2))
+gam.check(fin)
+```
+
+## Diagnostic plots
+
+```{r plots}
+resid <- residuals(fin, type = "deviance")
+linpred <- napredict(fin$na.action, fin$linear.predictors)
+observed.y <- napredict(fin$na.action, fin$y)
+par(mfrow=c(2,2))
+qq.gam(fin, rep = 0, level = 0.9, type = "deviance", rl.col = 2, 
+       rep.col = "gray80")
+hist(resid, xlab = "Residuals", main = "Histogram of residuals")
+plot(linpred, resid, main = "Resids vs. linear pred.", 
+     xlab = "linear predictor", ylab = "residuals")
+plot(fitted(fin), observed.y, xlab = "Fitted Values", 
+     ylab = "Response", main = "Response vs. Fitted Values")
+
+```
+
+## More on GAMs
+
+Change the family
+Add random effects (GAMM)
+
+Great online tutorial at: [https://noamross.github.io/gams-in-r-course/](https://noamross.github.io/gams-in-r-course/)
+
+## Generalized Estimating Equations (GEEs)
+
+Method for modelling longitudinal or clustered data
+
+Why not a mixed model?
+
+. . . 
+
+-   GEE models population average, MM are subject specific models
+-   GEE doesn't use a likelihood so can be easier to compute
+-   Can specify the correlation structure
+
+## Why not a GEE?
+
+-   Doesn't handle complex study designs well
+-   Model not suitable for simulation
+-   A lot of user definition required
+
+. . . 
+
+`geepack` in `R` for implementation
+
+## Ridge Regression
+
+Addresses two issues:
+
+-   Number of parameters exceeds the number of observations
+-   Predictor variables are highly correlated (collinearity)
+
+. . . 
+
+Works to decrease variance, which increases bias
+
+-   Bias is towards the null
+-   Shrinkage methods - shrinks the regression coefficients towards zero
+
+## Least Abosolute Shrinkage Selection Operator (lasso)
+
+Same idea as ridge regression
+
+-   Both are penalized regression
+-   Both are shrinkage methods
+
+Use different penalties
+
+-   Lasso can zero out coefficients
+-   Ridge is "easier" to implement, faster to compute
+
+## Multivariate regression
+
+**Multivariate $\ne$ Multi-variable**
+
+Multiple response variables in one model
+
+-   Model the correlation between response variables
+-   Same predictors for each, but different relationships
+-   Don't need special `R` packages
+
+## Multivariate regression in `R`
+```{r mult, echo=TRUE}
+data("airquality")
+ozone <- airquality[complete.cases(airquality),]
+m1    <- lm(cbind(Ozone,Solar.R)~Temp+Wind,data=ozone)
+summary(m1)
+```
+
+## Classification and Regression Trees (CART)
+
+Common approach to classification
+
+-   Sequential, binary splits of the data
+-   Classification tree: Categorical data
+-   Regression tree: Continuous data
+
+. . . 
+
+Three main elements 
+
+-   Rules for splitting nodes based on a single variable
+-   Stopping rules for when no further splits are possible
+-   Prediction for target variable in each terminal node
+
+## Advantages of CART
+
+-   Non-parametric
+-   Not significantly impacted by outliers
+-   Same variables can occur in multiple places
+-   Can deal with complex inter-dependencies
+-   Can be used in conjunction with other prediction methods
+
+## Random Forest
+
+Generate bootstrapped trees
+
+-   From random sample of the variables
+-   With replacement
+
+Classify a case for each “tree” in the “forest”
+
+Combine results to decide outcome
+
+-   Average for a regression tree
+-   Majority vote for a classification tree
+
+## Always more
+
+Regression is an active field of research
+
+Some models can be re-figured as regression
+
+-   Cox proportional hazards model
+
+Plenty I've never done
+
+-   Elastic net
+-   Support vector regression
+
+. . . 
+
+The tool is out there
