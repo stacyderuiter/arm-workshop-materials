@@ -1,5 +1,6 @@
 ---
 title: "Reproducible Research"
+subtitle: "Applied Regression Workshop"
 author: ""
 date: "June 2025"
 output:
@@ -12,7 +13,7 @@ output:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
-      ratio: '4:3'
+      ratio: '16:10'
 ---
 
 ```{r, setup, include=FALSE}
@@ -21,15 +22,45 @@ output:
 
 ## What's (computationally) "Reproducible"?
 
-- Someone *else* (or *you*?)...
-- can replicate your results given the
+.small[
+- **Someone *else*** (including *future you*)...
+
+- can (easily?) **understand** 
+
+- and **replicate** 
+
+- your **results** 
+
+- because you have provided
   - original data
   - documentation
   - any necessary code
-- (but make it *easy*)
-- Conflicting value: data privacy
+  
+]
 
 ---
+## Conflicting value: data privacy
+
+
+---
+
+## Making replication easy (easier)
+
+.small[
+- Code **style matters** (more in a moment)
+
+- Include sufficient **code book** for the data (units!)
+
+- **Document decisions**/judgement calls (and rationale)
+
+- Bonus: archive software used (`renv`, `packrat`, docker`, etc.)
+
+<!-- - Include comments about **why** and **how** -->
+
+]
+
+---
+
 class: big center inverse section
 
 <br>
@@ -37,14 +68,67 @@ class: big center inverse section
 # Our Stories
 
 ---
+
+## Top ~~10~~ 7 List 
+
+.small[
+1. Choose good **names**.
+
+1. Follow a **style guide** consistently.
+
+1. Create documents using **appropriate tools** ...
+
+1. Select a coherent, minimal, yet powerful **tool kit**.
+
+1. Don’t Repeat Yourself (**DRY**).
+
+1. Employ **consistency checks**.
+
+1. Get (**version**) **control** of the situation (e.g., GitHub).
+
+From [Fostering Better Coding Practices for Data Scientists](https://doi.org/10.1162/99608f92.97c9f60f)
+  (Randall Pruim, Maria-Cristiana Gîrjău, and Nicholas Jon Horton)
+  
+<!-- 1. Take advantage of a functional programming style. -->
+<!-- 1. Learn how to debug and to ask for help. -->
+
+<!-- 1. Be multilingual. -->
+]
+
+---
+
+## Code Style Tips
+
+.small[
+1. **BE CONSISTENT**
+
+1. Use good **names** (for variables and files)
+
+    * Length of name should be proportial to usage scope
+        * Document any abbreviations used
+    * Pick a system and be consistent (`camelCase`, `snake_case`, ...)
+    * Use ISO 8601 standard dates (e.g., 2025-06-17) in file names
+    
+1. Use **spaces**
+
+    * arround operators
+    * after commas
+    * to indent code (note: in RStudio use `<cmd/ctrl>-I`)
+]
+
+---
+
 ## Why Quarto (or Rmarkdown)?
 
-- Combine code *and* text
+.small[
+- Combine code, results, *and* text in single document
 - Generate reports, slides, websites, ebooks...
 - Embed/store code without necessarily showing it
 - Remember what you did
 - Quickly make corrections or add new data
+- Fancy stuff: parameterized reports, ...
 - ...
+]
 
 ---
 ## What about Git/GitHub?
@@ -72,6 +156,8 @@ class: smaller
 - [Reproducibility and Replicability in Science](https://www.ncbi.nlm.nih.gov/books/NBK547532/) (book @ nih.gov)
 - [Eleven strategies for making reproducible research...the norm](https://doi.org/10.7554/eLife.89736) (Friederike Kohrs & colleagues)
 - [...Data and Methods Transparency in Nonprofit Research](https://doi.org/10.1007/s11266-025-00736-0) (René Bekkers & colleagues)
+- [Fostering Better Coding Practices for Data Scientists](https://doi.org/10.1162/99608f92.97c9f60f)
+  (Randall Pruim, Maria-Cristiana Gîrjău, and Nicholas Jon Horton)
 
 ---
 class: small
