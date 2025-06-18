@@ -98,10 +98,10 @@ Something like:
 ```{r}
 #| eval: false
 hdma_mi_20 <- hdma_mi_20 |>
-  mutate(my_response_variable = factor(my_response_variable),
-         my_predictor_1 = factor(my_predictor_1),
-         my_predictor_2 = factor(my_predictor_2)
-         # (repeat above for as many categorical predictors as you need to use)
+  mutate(action_taken = if_else(action_taken == "1", "loan awarded", "loan denied"),
+         action_taken = fct_relevel(action_taken,
+                                    "loan denied",
+                                    "loan awarded")
   )
 ```
 

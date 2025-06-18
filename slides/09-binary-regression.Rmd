@@ -190,7 +190,7 @@ What if our response variable is *binary* -- a categorical variable with just tw
 ### The [Binomial](https://en.wikipedia.org/wiki/Binomial_distribution)!
 
 $$
-P(x = s \vert n, p) = {n \choose s}p^k(1-p)^{(n-k)}
+P(x = s \vert n, p) = {n \choose s}p^s(1-p)^{(n-s)}
 $$
 --
 
