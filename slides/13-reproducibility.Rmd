@@ -1,5 +1,6 @@
 ---
 title: "Reproducible Research"
+subtitle: "Applied Regression Workshop"
 author: ""
 date: "June 2025"
 output:
