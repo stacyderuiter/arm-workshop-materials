@@ -289,7 +289,11 @@ Two different ways to fit these models:
 ]
 ]
 
+---
+# Optimizers?
 
+- [`glmmTMB` troubleshooting](https://glmmtmb.github.io/glmmTMB/articles/troubleshooting.html) help online
+- or stack overflow? (thanks, [Ben](https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.math.mcmaster.ca/bolker))
 
 ---
 class: small
