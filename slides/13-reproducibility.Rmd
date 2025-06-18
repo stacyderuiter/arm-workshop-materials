@@ -38,19 +38,33 @@ output:
 ]
 
 ---
+## Conflicting value: data privacy
+
+
+---
 
 ## Making replication easy (easier)
 
 .small[
-- Code **style matters**
+- Code **style matters** (more in a moment)
 
 - Include sufficient **code book** for the data (units!)
 
 - **Document decisions**/judgement calls (and rationale)
 
-- Include comments about **why** and **how**
+- Bonus: archive software used (`renv`, `packrat`, docker`, etc.)
+
+<!-- - Include comments about **why** and **how** -->
 
 ]
+
+---
+
+class: big center inverse section
+
+<br>
+<br>
+# Our Stories
 
 ---
 
@@ -69,7 +83,7 @@ output:
 
 1. Employ **consistency checks**.
 
-1. Get (**version**) **control** of the situation (e.g., GitHub)
+1. Get (**version**) **control** of the situation (e.g., GitHub).
 
 From [Fostering Better Coding Practices for Data Scientists](https://doi.org/10.1162/99608f92.97c9f60f)
   (Randall Pruim, Maria-Cristiana Gîrjău, and Nicholas Jon Horton)
@@ -92,7 +106,7 @@ From [Fostering Better Coding Practices for Data Scientists](https://doi.org/10.
     * Length of name should be proportial to usage scope
         * Document any abbreviations used
     * Pick a system and be consistent (`camelCase`, `snake_case`, ...)
-    * Use ISO 8601 standzrd dates (e.g., 2025-06-17)
+    * Use ISO 8601 standard dates (e.g., 2025-06-17) in file names
     
 1. Use **spaces**
 
@@ -103,17 +117,6 @@ From [Fostering Better Coding Practices for Data Scientists](https://doi.org/10.
 
 ---
 
-## Conflicting value: data privacy
-
-
----
-class: big center inverse section
-
-<br>
-<br>
-# Our Stories
-
----
 ## Why Quarto (or Rmarkdown)?
 
 .small[
