@@ -168,21 +168,18 @@ When our response variable was a *count* variable, we modified our equation to:
 
 --
 
-$$log(\lambda_i) = \beta_0 + \beta_1 x_{1,i} + \beta_2 x_{2,i} + \beta_3 x_{3,i} +$$
-$$...\beta_k x_{k,i} + \epsilon_{i}$$
+$$log(\lambda_i) = \beta_0 + \beta_1 x_{1,i} + \beta_2 x_{2,i} + \dots \beta_k x_{k,i}$$
 
 --
 
 .small[
-positing that $y_i \sim Pois(\lambda_i)$ for Poisson regression; similarly for negative binomial regression, we just replaced that Poisson distribution with a negative binomial distribution (and replaced $\lambda_i$ with $\mu_i$, stating that $y_i \sim NegBin(\mu_i, \sigma)$).
+positing that $y_i \sim Pois(\lambda_i)$ and $\epsilon_i = y_i - \lambda_i$ for Poisson regression; similarly for negative binomial regression, we just replaced that Poisson distribution with a negative binomial distribution (and replaced $\lambda_i$ with $\mu_i$, stating that $y_i \sim NegBin(\mu_i, \phi)$ and $\epsilon_i = y_i - \mu_i$).
 ]
 ---
 
 # Binary Response?
 
 What if our response variable is *binary* -- a categorical variable with just two possible values?  We will designate one of the two values a "success," and then we want to predict the probability of success as a function of some set of predictors.  What will our model equation look like in this case?
-
-<!-- $$ logit(p_i) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + ...\beta_k x_k + \epsilon_{link}$$ -->
 
 ---
 
@@ -228,9 +225,28 @@ $$logit(p_i) = log(\frac{p_i}{(1-p_i)}) =$$
 
 --
 
-$$\beta_0 + \beta_1 x_{1,i} + \beta_2 x_{2,i} + \beta_3 x_{3,i} + ...\beta_k x_{k,i} + \epsilon_{i}$$
+$$\beta_0 + \beta_1 x_{1,i} + \beta_2 x_{2,i} + ...\beta_k x_{k,i}$$
 
-Where: $\text{response} \sim Binom(n, p_i)$
+.small[
+Where: $\text{response} \sim Binom(n, p_i)$ and there *are* still residuals: observed successes (from data) minus expected successes (according to the model, according to $p_i$)
+]
+
+<!-- --- -->
+<!-- # GLM Structure -->
+
+<!-- So we can think about the model equation for a GLM like: -->
+
+<!-- $$ -->
+<!-- \text{link function}(\text{parameter of probability distribution}_i) = ... -->
+<!-- $$ -->
+<!-- $$ -->
+<!-- \beta_0 + beta_1 x_{1i} + \beta_2 x_{2i} + ...\beta_{ki} -->
+<!-- $$ -->
+<!-- $$\text{response}_i \sim \text{probability distribution}(\text{parameter}_i, \text{...other parameters, maybe})$$ -->
+
+<!-- $$ -->
+<!-- \epsilon_i = \text{response}_i - \text{expected response}_i -->
+<!-- $$ -->
 
 ---
 

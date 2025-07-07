@@ -213,9 +213,10 @@ $$ y = \rule{1cm}{0.15mm} + \rule{1cm}{0.15mm} x \dots$$
 
 ## But the Line isn't Perfect
 
-There is some error $\epsilon$ in our model for the data, so we should keep track of it.
+There is some error $\epsilon$ in our model for the data, so we should keep track of it. We could say
 
-$$ y = \beta_0 + \beta_1 x + \epsilon$$
+$$y_i = \beta_0 + \beta_1 x_{1i} + \epsilon_i$$
+
 
 ---
 
@@ -275,6 +276,23 @@ where
 $$ \epsilon \sim N(0, \sigma)$$
 
 
+---
+## OR Complete Regression Equation
+### Connecting the Normal distribution parameter $\mu$
+### And our response variable $y$
+
+
+$$\mu_i = \beta_0 + \beta_1 x_{1i}$$
+
+$$
+y_i \sim N(\mu_i, \sigma),
+$$
+
+$$
+\epsilon_i = y_i - \mu_i, \text{ and}
+$$
+
+$$\epsilon \sim N(0,\sigma)$$
 ---
 
 ## Bonobo Regression Equation
